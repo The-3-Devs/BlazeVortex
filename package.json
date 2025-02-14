@@ -1,0 +1,23 @@
+{
+  "name": "BYD",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "run": "npx tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "appwrite": "^17.0.0",
+    "concurrently": "^9.1.2",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "epxress": "0.0.1-security",
+    "firebase": "^11.3.1",
+    "firebase-admin": "^13.1.0",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
