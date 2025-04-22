@@ -1,0 +1,7 @@
+2025-04-22T14:05:12.164Z - ArtificialXDev: !debug
+2025-04-22T14:11:07.868Z - ArtificialXDev: !debug
+2025-04-22T14:11:10.296Z - ArtificialXDev: debug
+2025-04-22T14:11:20.027Z - ArtificialXDev: !debu
+2025-04-22T14:11:48.690Z - ArtificialXDev: !setgame i love one piece
+2025-04-22T14:13:46.302Z - ArtificialXDev: what are your memory?
+2025-04-22T14:13:57.602Z - ArtificialXDev: !ai what are your mem
