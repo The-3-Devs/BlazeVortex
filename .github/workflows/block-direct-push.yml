@@ -9,6 +9,9 @@ jobs:
   block-and-revert:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Check if push is a PR merge
         run: |
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
