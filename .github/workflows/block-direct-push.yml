@@ -1,0 +1,27 @@
+name: Block and Revert Direct Push to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  block-and-revert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if push is a PR merge
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MESSAGE"
+          
+          if [[ "$COMMIT_MESSAGE" != Merge\ pull\ request* ]]; then
+            echo "❌ Unauthorized direct push detected! Reverting..."
+            
+            git fetch origin main
+            LAST_GOOD_COMMIT=$(git rev-parse origin/main~1)
+            git reset --hard $LAST_GOOD_COMMIT
+            git push origin main --force
+            exit 1
+          else
+            echo "✅ PR merge detected. No action needed."
+          fi
