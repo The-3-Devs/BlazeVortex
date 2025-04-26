@@ -1,4 +1,4 @@
-name: Protect Main Branch
+name: Prevent Direct Push to Main
 
 on:
   push:
@@ -6,31 +6,28 @@ on:
       - main
 
 jobs:
-  protect-main:
+  check-direct-push:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 20  # should be enough...
+          fetch-depth: 20  # Should be enough...
 
-      - name: Detect and revert unauthorized direct pushes
+      - name: Check commit and revert if necessary
         run: |
-          git fetch origin main
+          echo "🔍 Checking last commit..."
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "🔹 Commit message: $COMMIT_MESSAGE"
 
-          # Find the first merge commit
-          MERGE_COMMIT=$(git log --pretty=format:"%H %s" | grep -m 1 "^.* Merge pull request" | awk '{print $1}')
-
-          if [ -z "$MERGE_COMMIT" ]; then
-            echo "❌ No valid merge commit found! Cannot revert safely."
+          if [[ "$COMMIT_MESSAGE" != Merge\ pull\ request* ]]; then
+            echo "❌ Unauthorized direct push detected! Reverting..."
+            
+            git fetch origin main
+            LAST_GOOD_COMMIT=$(git rev-parse HEAD~1)
+            git reset --hard $LAST_GOOD_COMMIT
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main --force
             exit 1
+          else
+            echo "✅ PR merge detected. No action needed."
           fi
-
-          echo "✅ Last good merge commit: $MERGE_COMMIT"
-
-          # Reset main branch to last good PR merge
-          git reset --hard "$MERGE_COMMIT"
-          git push origin main --force
-
-          echo "🔁 Successfully reverted unauthorized direct commits."
