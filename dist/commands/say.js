@@ -14,6 +14,7 @@ const command = {
     description: "Replies with whatever you want me to say!",
     // it says the message in the argument, but it doesen't add it to the command list right..?
     // like it adds a /say command with no arguments, but this would expect one.
+    // this is a problemo with discord not our problem
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
         // Get the content from the user's input
         const userMessage = interaction.options.getString("message"); // here these are the args

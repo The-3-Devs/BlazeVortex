@@ -23,7 +23,7 @@ const command = {
         // { name: "/ban", value: "Bans a user from the server." },
         { name: "/coinFlip", value: "Flips a coin and shows either a red or green emoji!" }, { name: "/help", value: "Displays this list of commands and their descriptions." }, { name: "/invite", value: "Sends an invite link for the bot." }, { name: "/joke", value: "Tells a random joke." }, 
         // { name: "/kick", value: "Kicks a user from the server." },
-        { name: "/me", value: "Shows the bot's about me and avatar!" }, { name: "/ping", value: "Replies with 'Pong!'" }, { name: "/xp", value: "Displays the user's current XP or level." });
+        { name: "/me", value: "Shows the bot's about me and avatar!" }, { name: "/ping", value: "Replies with 'Pong!'" });
         // Send the embed
         yield interaction.reply({ embeds: [embed] });
     }),

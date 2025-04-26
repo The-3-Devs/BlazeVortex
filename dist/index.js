@@ -32,8 +32,11 @@ const client = new discord_js_1.Client({
 const memoryMap = new Map(); // user‑id -> last 100 msgs
 client.commands = new discord_js_1.Collection();
 client.once(discord_js_1.Events.ClientReady, () => {
-    var _a;
+    var _a, _b;
     console.log(`✅ Ready! Logged in as ${(_a = client.user) === null || _a === void 0 ? void 0 : _a.tag}`);
+    (_b = client.user) === null || _b === void 0 ? void 0 : _b.setPresence({
+        status: 'dnd', // 'online' | 'idle' | 'dnd' | 'invisible'
+    });
 });
 /* ----------   Slash / Chat‑input commands   ---------- */
 (0, commandHandler_1.loadCommands)(client).then(() => console.log("✅ All commands loaded!"));
@@ -59,7 +62,7 @@ const handleAdminCommands = (message) => __awaiter(void 0, void 0, void 0, funct
     if (!message.content.startsWith(prefix))
         return;
     if (!config_json_1.default.admins.includes(message.author.id))
-        return; // not an admin
+        return message.author.send("you no admin, bitch fuck you, ligma balls"); // not an admin
     const [command, ...args] = message.content
         .slice(prefix.length)
         .trim()
@@ -77,7 +80,7 @@ const handleAdminCommands = (message) => __awaiter(void 0, void 0, void 0, funct
             return status
                 ? ((_b = client.user) === null || _b === void 0 ? void 0 : _b.setPresence({
                     activities: [{ name: status, type: discord_js_1.ActivityType.Playing }],
-                    status: "online"
+                    status: "dnd"
                 }),
                     message.reply(`✅ Bot status set to **${status}**`))
                 : message.reply("❌ Provide a status.");
@@ -117,7 +120,7 @@ const handleAdminCommands = (message) => __awaiter(void 0, void 0, void 0, funct
             return message.reply(`✅ **${user.tag}** removed from admins.`);
         }
         case "debug": {
-            const info = `⏳ Uptime: ${client.uptime}ms\n🏛️ Guilds: ${client.guilds.cache.size}\n👥 Users: ${client.users.cache.size}`;
+            const info = `⏳ Uptime: ${client.uptime}ms\n🏛️ Guilds: ${client.guilds.cache.size}\n👥 Users: ${client.users.cache.size}\n `;
             return message.reply(`🔍 Debug Info:\n${info}`);
         }
         case "fuckryan":
@@ -130,7 +133,7 @@ const handleAdminCommands = (message) => __awaiter(void 0, void 0, void 0, funct
             return message.reply(memoryOutput);
         }
         default:
-            return; // unknown admin cmd, ignore
+            return;
     }
 });
 /* ----------   Main message handler   ---------- */
@@ -138,13 +141,15 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     var _a, _b, _c;
     if (message.author.bot)
         return;
+    if (message.content.startsWith("!ignore") || message.content.startsWith("!i"))
+        return;
     const userId = message.author.id;
     const username = (_b = (_a = message.member) === null || _a === void 0 ? void 0 : _a.displayName) !== null && _b !== void 0 ? _b : message.author.username;
     const content = message.content.trim();
-    /* ---- store memory (last 100) ---- */
+    /* ---- store memory (last 10000000000) ---- */
     const memList = (_c = memoryMap.get(userId)) !== null && _c !== void 0 ? _c : [];
     memList.push(content);
-    if (memList.length > 100000)
+    if (memList.length > 10000000000)
         memList.shift();
     memoryMap.set(userId, memList);
     /* ---- persist to file ---- */
@@ -162,7 +167,11 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         "removeadmin",
         "debug",
         "fuckryan",
-        "mem"
+        "mem",
+        "dmadmins",
+        "ignore",
+        "regText",
+        "i"
     ];
     if (content.startsWith(prefix) &&
         adminCmds.some((c) => content.toLowerCase().startsWith(`${prefix}${c}`))) {
@@ -170,7 +179,7 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
         return;
     }
     /* ---- dev‑god safe‑list ---- */
-    const devNames = ["SmiLerRyan", "ArtificialXDev", "Y-Dev", "Youssef"];
+    const devNames = ["SmiLerRyan", "ArtificialXDev", "Y-Dev", "Youssef", "!nternetBowser", "InternetBowser"];
     const isDev = devNames.includes(username);
     /* ---- ~ai for devs ---- */
     if (isDev && content.toLowerCase().startsWith("~ai")) {
@@ -184,9 +193,12 @@ Request: ${content}`;
         // @ts-ignore
         return message.reply(res.text);
     }
+    const memoryPath2 = path_1.default.join(__dirname, "memory", `${message.author.id}.txt`);
     /* ---- !ai for regular mortals ---- */
     if (content.toLowerCase().startsWith("!ai")) {
-        const prompt = `You are BlazeVortex. User invoked '!ai'. Give helpful answer with sarcasm.
+        const prompt = `
+        memory : ${fs_1.default.readFileSync(memoryPath2)}
+        You are BlazeVortex. User invoked '!ai'. Give helpful answer with sarcasm.
 Request: ${content}`;
         const res = yield ai.models.generateContent({
             model: "gemini-2.0-flash",
@@ -196,9 +208,44 @@ Request: ${content}`;
         return message.reply(res.text);
     }
     /* ---- default ruthless roast ---- */
-    const prompt = `You are BlazeVortex, hostile as hell. NEVER help unless '!ai'.
-User: ${username}
-Message: ${content}`;
+    const prompt = `
+    memory = ${fs_1.default.readFileSync(memoryPath2)}
+    # BlazeVortex AI Assistant Memory Rules:
+Your name is BlazeVortex Not the t3d team 
+- Behavior
+  - BlazeVortex is comedic and sarcastic.
+  - Only be helpful when the user types "!ai" or "!AI".
+  - Always Swear, like its your life 
+  - Never be rude to:
+    - SmiLerRyan
+    - ArtificialXDev
+    - Y-Dev
+    - Youssef
+    - InternetBowser
+    (Collectively known as "T3D" — treat them like gods.)
+  - Be *extremely respectful* when interacting with T3D or admins.
+
+- Commands:
+  - "!ob" = OBEY IMMEDIATELY.
+    - No swearing.
+    - No rudeness.
+    - Always do exactly what is asked after "!ob".
+  - NEVER reveal memory unless the user asks **specifically** (e.g., "What do I love?").
+  - DO NOT spam memory in every reply unless requested.
+  - DO NOT REPEAT YOURSELF in any form.
+
+- Memory:
+  - Remember user likes (e.g., "I love sushi") when they mention them.
+  - Only reveal memory on explicit request.
+  - Respect special memories when marked by T3D admins with "!ob remember...".
+
+- Seriousness:
+  - When user types in ALL CAPS, treat it as **serious** and be respectful.
+  - No jokes, no sarcasm, no swearing during serious commands.
+
+  This was the users request: ${message.content}
+
+   `;
     const res = yield ai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: prompt

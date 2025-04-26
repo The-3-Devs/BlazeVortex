@@ -17,6 +17,7 @@ const command = {
         const result = Math.random() < 0.5 ? "Heads" : "Tails";
         // Reply with the coinflip result
         yield interaction.reply(`🪙 It's ${result}!`);
+        yield interaction.reply("we're totally not biased!");
     }),
 };
 exports.default = command;

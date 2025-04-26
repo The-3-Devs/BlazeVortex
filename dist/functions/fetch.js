@@ -13,10 +13,10 @@ exports.default = fetchURL;
 function fetchURL(Url) {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch(Url);
-        if (!response.ok)
+        if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         const textResult = yield response.text();
-        console.log(textResult);
         return textResult;
     });
 }

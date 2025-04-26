@@ -13,7 +13,7 @@ const command = {
     name: "me",
     description: "Replies with My About Me!",
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
-        const msg = "I am a helpful bot here to assist you, I love helping people with code and more!";
+        const msg = "I am a helpful bot here to assist you, I love helping people with code and more, but don't ask my ai something, he's rude asf.";
         yield interaction.reply(msg);
     }),
 };

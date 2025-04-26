@@ -1,20 +1,23 @@
 {
-  "name": "BYD",
+  "name": "BlazeVortex",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "run": "npx tsc && node dist/index.js"
+    "dev": "npx tsc && node dist/index.js"
   },
   "dependencies": {
     "@google/genai": "^0.9.0",
     "appwrite": "^17.0.0",
+    "chalk": "^5.4.1",
+    "chalknpm": "^1.0.1",
     "concurrently": "^9.1.2",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "epxress": "0.0.1-security",
     "firebase": "^11.3.1",
     "firebase-admin": "^13.1.0",
+    "install": "^0.13.0",
     "nodemon": "^3.1.9"
   },
   "devDependencies": {

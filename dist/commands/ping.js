@@ -14,6 +14,7 @@ const command = {
     description: "Replies with Pong!",
     execute: (interaction) => __awaiter(void 0, void 0, void 0, function* () {
         yield interaction.reply("🏓 Pong!");
+        yield interaction.reply("bro who gave me this idea? this is bs!");
     }),
 };
 exports.default = command;

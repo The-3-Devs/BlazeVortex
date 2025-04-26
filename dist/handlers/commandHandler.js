@@ -49,10 +49,12 @@ exports.loadCommands = void 0;
 const discord_js_1 = require("discord.js");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+const config_json_1 = __importDefault(require("../config.json")); // 💥 YOU SAID tokens and IDs are here
 const loadCommands = (client) => __awaiter(void 0, void 0, void 0, function* () {
     const commands = new discord_js_1.Collection();
     const commandsPath = path_1.default.join(__dirname, "../commands");
     const commandFiles = fs_1.default.readdirSync(commandsPath).filter(file => file.endsWith(".ts") || file.endsWith(".js"));
+    const slashCommands = [];
     for (const file of commandFiles) {
         const filePath = path_1.default.join(commandsPath, file);
         const commandModule = yield Promise.resolve(`${filePath}`).then(s => __importStar(require(s)));
@@ -60,11 +62,27 @@ const loadCommands = (client) => __awaiter(void 0, void 0, void 0, function* () 
         if (command === null || command === void 0 ? void 0 : command.name) {
             commands.set(command.name, command);
             console.log(`✅ Loaded command: ${command.name}`);
+            slashCommands.push({
+                name: command.name,
+                description: command.description,
+                options: command.options || [],
+            });
         }
         else {
             console.warn(`⚠️ Command ${file} is missing a name.`);
         }
     }
     client.commands = commands;
+    // 🚀 Deploy to Discord API
+    const rest = new discord_js_1.REST({ version: "10" }).setToken(config_json_1.default.token);
+    try {
+        console.log("🌐 Deploying commands to Discord...");
+        yield rest.put(discord_js_1.Routes.applicationCommands(config_json_1.default.clientId), // ⚡ clientId from config.json
+        { body: slashCommands });
+        console.log("✅ Commands deployed successfully!");
+    }
+    catch (error) {
+        console.error("❌ Failed to deploy commands:", error);
+    }
 });
 exports.loadCommands = loadCommands;
