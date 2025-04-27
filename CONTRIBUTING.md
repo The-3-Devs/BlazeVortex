@@ -21,6 +21,12 @@ Make sure you have the GitHub CLI installed and that you account has 2FA
     git checkout -b [branch name]
     ```
 
+    (If you already checked out a branch previously you can just run the following code)
+
+    ```bash
+    git checkout
+    ```
+
 3. **Make Changes**  
     Implement your changes and ensure your code follows our previous design patterns
 
