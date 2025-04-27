@@ -12,19 +12,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important: fetch full history so we can revert
+          fetch-depth: 0
 
-      - name: Check for PR approvals
+      - name: Fetch PR reviews safely
         id: check_approval
         run: |
-          echo "Checking if PR was properly approved..."
+          echo "Fetching PR reviews..."
           PR_URL="${{ github.event.pull_request.url }}"
-          echo "Fetching PR reviews from $PR_URL/reviews"
+          REVIEWS_JSON=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${PR_URL}/reviews")
 
-          APPROVAL_COUNT=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "${PR_URL}/reviews" | jq '[.[] | select(.state == "APPROVED")] | length')
+          echo "$REVIEWS_JSON" | jq empty && IS_JSON_VALID=true || IS_JSON_VALID=false
 
-          echo "Number of approvals: $APPROVAL_COUNT"
+          if [ "$IS_JSON_VALID" = true ]; then
+            APPROVAL_COUNT=$(echo "$REVIEWS_JSON" | jq '[.[] | select(.state == "APPROVED")] | length')
+            echo "✅ Found $APPROVAL_COUNT approvals."
+          else
+            echo "❌ Invalid JSON fetched (maybe no permission?), treating as 0 approvals."
+            APPROVAL_COUNT=0
+          fi
+
           echo "approvals=$APPROVAL_COUNT" >> $GITHUB_ENV
 
       - name: Revert Unauthorized Merge
