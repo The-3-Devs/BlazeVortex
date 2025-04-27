@@ -2,7 +2,7 @@ name: Require PR Approval
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    types: [closed]
 
 jobs:
   check-approvals:
