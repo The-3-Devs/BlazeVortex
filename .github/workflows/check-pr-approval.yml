@@ -1,0 +1,32 @@
+name: Require PR Approval
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  check-approvals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR has approvals
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking PR approvals..."
+          
+          PR_URL="${{ github.event.pull_request.url }}"
+          
+          REVIEWS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$PR_URL/reviews")
+
+          APPROVED_COUNT=$(echo "$REVIEWS" | jq '[.[] | select(.state == "APPROVED")] | length')
+
+          echo "Number of approvals: $APPROVED_COUNT"
+
+          if [ "$APPROVED_COUNT" -lt 1 ]; then
+            echo "❌ PR does not have enough approvals!"
+            exit 1
+          else
+            echo "✅ PR has enough approvals!"
+          fi
