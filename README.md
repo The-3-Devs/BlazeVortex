@@ -1,3 +1,3 @@
 # BlazeVortex bot, in development.
 
-Let us cook
+## **IMPORTANT: Read [CONTRIBUTING.md](/CONTRIBUTING.md) before working/commiting any changes**
