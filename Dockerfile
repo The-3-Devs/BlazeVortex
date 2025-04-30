@@ -1,13 +1,14 @@
-# Use Node.js 20 as base
-FROM node:18
+FROM node:22-slim
 
 WORKDIR /
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --production
 
 COPY . .
 
+ENV PORT=8080
 EXPOSE 8080
 
-CMD [ "npm", "run", "dev" ]
+# Start the app
+CMD ["npm", "run", "dev"]
