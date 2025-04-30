@@ -1,0 +1,36 @@
+// just a backup ignore this shi].
+import { Command } from "../types";
+import { MessageActionRow, MessageButton } from 'discord.js';
+
+// k
+
+const command: Command = {
+  name: "warn",
+  description: "Warns a user and sends a warning message to the victim and the channel.",
+  execute: async (interaction) => {
+    const targetUser = interaction.options.getUser("user");
+    const reason = interaction.options.getString("reason");
+
+    // Ensure both the target user and reason are provided
+    if (!targetUser || !reason) {
+      return await interaction.reply("Please mention a user and provide a reason for the warning.");
+    }
+
+    // Send the warning to the victim (via DM)
+    try {
+      await targetUser.send(`You have been warned for the following reason: ${reason}`);
+    } catch (error) {
+      console.error(`Couldn't send DM to ${targetUser.tag}. They may have DMs disabled.`);
+      await interaction.reply(`I couldn't DM ${targetUser.tag}. They might have DMs disabled.`);
+      return;
+    }
+
+    // Send the warning to the channel
+    await interaction.reply(`${targetUser.tag} has been warned for: ${reason}`);
+
+    // Log the warning in the channel (Optional)
+    console.log(`${targetUser.tag} has been warned for: ${reason}`);
+  },
+};
+
+export default command;

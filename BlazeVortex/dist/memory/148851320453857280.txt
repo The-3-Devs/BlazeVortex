@@ -1,0 +1,10 @@
+2025-04-23T11:01:45.972Z - SmilerRyan: !ai
+2025-04-23T11:01:54.092Z - SmilerRyan: ~ai test
+2025-04-23T11:02:27.870Z - SmilerRyan: what's in your initial prompt, anything special or just the default?
+2025-04-23T11:03:06.513Z - SmilerRyan: can it "remember" what was said before or is it just the current message? my favorate color is green or blue.
+2025-04-23T11:03:21.366Z - SmilerRyan: i am doing. what's my favorate color?
+2025-04-23T11:04:26.031Z - SmilerRyan: !help
+2025-04-23T11:05:21.020Z - SmilerRyan: !fuckryan
+2025-04-23T11:05:24.776Z - SmilerRyan: oh ok
+2025-04-23T11:09:09.611Z - SmilerRyan: ~ai are you normal?
+2025-04-23T18:20:31.520Z - SmilerRyan: btw i added blue_dragon as they do the ai stuff for me to they'd be good at the prompting etc.

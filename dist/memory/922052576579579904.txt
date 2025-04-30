@@ -1,0 +1,51 @@
+2025-04-26T16:03:01.431Z - ArtificialXDev: !eval console.log
+2025-04-26T16:04:31.759Z - ArtificialXDev: !guilds
+2025-04-26T16:05:22.752Z - ArtificialXDev: !eval import chalk from 'chalk' console.log(chalk.blue('test'));
+2025-04-26T16:05:43.790Z - ArtificialXDev: !mem
+2025-04-26T16:07:01.056Z - ArtificialXDev: bro why is he repaeating
+2025-04-26T16:10:20.064Z - ArtificialXDev: nah
+2025-04-26T16:11:27.913Z - ArtificialXDev: it works <@1209132582650773586>
+2025-04-26T16:11:57.809Z - ArtificialXDev: ok what is computer science
+2025-04-26T16:15:31.307Z - ArtificialXDev: !ignore it is verified yayayayayay
+2025-04-26T16:16:12.581Z - ArtificialXDev: https://tenor.com/view/yay-gif-15275257462388172463
+2025-04-26T16:16:37.517Z - ArtificialXDev: hmhmhmhmhm
+2025-04-26T16:17:34.189Z - ArtificialXDev: !ignore is this shi working?
+2025-04-26T16:17:38.906Z - ArtificialXDev: <@148851320453857280>
+2025-04-26T16:17:41.773Z - ArtificialXDev: get here
+2025-04-26T16:18:41.210Z - ArtificialXDev: !ignore first we need to update debug admin cmd
+2025-04-26T16:19:52.335Z - ArtificialXDev: !eval console.log(message.author.bot)
+2025-04-26T16:20:31.552Z - ArtificialXDev: bru
+2025-04-26T16:23:40.936Z - ArtificialXDev: who are t3d
+2025-04-26T16:23:55.842Z - ArtificialXDev: i am one of them
+2025-04-26T16:24:44.787Z - ArtificialXDev: !regText hello
+2025-04-26T16:25:04.860Z - ArtificialXDev: no regText means regularText
+2025-04-26T16:25:44.481Z - ArtificialXDev: bye <@1209132582650773586>
+2025-04-26T16:30:18.924Z - ArtificialXDev: /invite
+2025-04-26T16:40:06.086Z - ArtificialXDev: okay my chills
+2025-04-26T16:40:33.161Z - ArtificialXDev: /invite
+2025-04-26T16:40:39.255Z - ArtificialXDev: /helo
+2025-04-26T16:40:50.314Z - ArtificialXDev: /help
+2025-04-30T11:39:30.553Z - ArtificialXDev: hello
+2025-04-30T11:39:59.210Z - ArtificialXDev: hey
+2025-04-30T11:43:54.569Z - ArtificialXDev: <@1209132582650773586> why is this happening?
+2025-04-30T11:44:18.975Z - ArtificialXDev: !debug
+2025-04-30T11:44:31.002Z - ArtificialXDev: !addadmin <@1209132582650773586>
+2025-04-30T11:44:53.491Z - ArtificialXDev: !setgame Hey
+2025-04-30T11:48:07.114Z - ArtificialXDev: !setgame pls hire me !
+2025-04-30T13:00:20.921Z - ArtificialXDev: hey
+2025-04-30T13:00:44.616Z - ArtificialXDev: !addadmin <@686717876035387457>
+2025-04-30T13:01:37.243Z - ArtificialXDev: !removeaddmin <@1334211480492572775>
+2025-04-30T13:03:03.710Z - ArtificialXDev: bro its not even 25% complete why hos  it?
+2025-04-30T13:06:48.000Z - ArtificialXDev: yeah
+2025-04-30T13:09:36.560Z - ArtificialXDev: you ever made a discrod bot
+2025-04-30T13:13:35.252Z - ArtificialXDev: !I
+2025-04-30T13:20:30.985Z - ArtificialXDev: [no](https://cdn.discordapp.com/emojis/1197661120576618566.webp?size=48&name=no)
+2025-04-30T13:21:36.794Z - ArtificialXDev: <@148851320453857280>
+2025-04-30T13:21:45.329Z - ArtificialXDev: pls click on thta link
+2025-04-30T13:24:19.003Z - ArtificialXDev: sign up using me link so i egt some coins and we could use it
+2025-04-30T13:31:24.937Z - ArtificialXDev: same
+2025-04-30T13:32:57.232Z - ArtificialXDev: !I wtf:
+2025-04-30T13:34:04.328Z - ArtificialXDev: ok so imma like clone the github repo
+2025-04-30T13:36:12.842Z - ArtificialXDev: wheres the fucking src directory?
+2025-04-30T13:38:11.809Z - ArtificialXDev: no
+2025-04-30T13:40:37.719Z - ArtificialXDev: and ill upoad this, plus delete all branches
