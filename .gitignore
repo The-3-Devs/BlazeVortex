@@ -8,6 +8,8 @@ yarn-error.log*
 /.pnp
 .pnp.js
 
+/dist
+
 /src/config.json
 /dist/config.json
 

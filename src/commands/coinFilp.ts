@@ -9,7 +9,6 @@ const command: Command = {
 
     // Reply with the coinflip result
     await interaction.reply(`🪙 It's ${result}!`);
-    await interaction.reply("we're totally not biased!")
   },
 };
 
