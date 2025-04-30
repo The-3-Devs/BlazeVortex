@@ -9,5 +9,6 @@ yarn-error.log*
 .pnp.js
 
 /src/config.json
+/dist/config.json
 
 .vscode/*
