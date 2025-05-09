@@ -219,7 +219,7 @@ client.on("messageCreate", async (message: Message) => {
       model: "gemini-2.0-flash",
       contents: prompt,
     });
-    
+
     //@ts-ignore
     const chunks = splitMessage(res.text);
 
