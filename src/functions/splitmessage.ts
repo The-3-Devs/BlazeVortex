@@ -6,32 +6,33 @@
 export default function splitMessage(text: string, maxLength = 2000): string[] {
     if (text.length <= maxLength) return [text];
   
-    const words = text.split(/\s+/);
     const messages: string[] = [];
     let current = '';
   
-    for (const word of words) {
-      if (word.length > maxLength) {
+    const tokens = text.match(/(\s+|\S+)/g) || [];
+  
+    for (const token of tokens) {
+      if (token.length > maxLength) {
         if (current) {
-          messages.push(current.trim());
+          messages.push(current);
           current = '';
         }
-        for (let i = 0; i < word.length; i += maxLength) {
-          messages.push(word.slice(i, i + maxLength));
+        for (let i = 0; i < token.length; i += maxLength) {
+          messages.push(token.slice(i, i + maxLength));
         }
         continue;
       }
   
-      if ((current + word + ' ').length > maxLength) {
-        messages.push(current.trim());
+      if ((current + token).length > maxLength) {
+        messages.push(current);
         current = '';
       }
   
-      current += word + ' ';
+      current += token;
     }
   
-    if (current.trim()) {
-      messages.push(current.trim());
+    if (current) {
+      messages.push(current);
     }
   
     return messages;
