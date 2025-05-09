@@ -173,7 +173,7 @@ client.on("messageCreate", async (message: Message) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
   fs.appendFileSync(
     path.join(dir, `${userId}.txt`),
-    `${new Date().toISOString()} - ${username}: ${content}\n`,
+    `${new Date().toISOString()} - ${username}: ${content}\n`
   );
 
   /* ---- check for admin text‑prefix commands ---- */
@@ -219,9 +219,19 @@ client.on("messageCreate", async (message: Message) => {
       model: "gemini-2.0-flash",
       contents: prompt,
     });
-    // @ts‑ignore
-    // @ts-ignore
-    return message.reply(res.text);
+    
+    //@ts-ignore
+    const chunks = splitMessage(res.text);
+
+    if (chunks.length > 0) {
+      await message.reply(chunks[0]);
+
+      if ("send" in message.channel) {
+        for (let i = 1; i < chunks.length; i++) {
+          await (message.channel as TextBasedChannelFields).send(chunks[i]);
+        }
+      }
+    }
   }
   const memoryPath2 = path.join(
     __dirname,
@@ -240,8 +250,18 @@ client.on("messageCreate", async (message: Message) => {
       contents: prompt,
     });
 
-    // @ts-ignore
-    return message.reply(res.text);
+    //@ts-ignore
+    const chunks = splitMessage(res.text);
+
+    if (chunks.length > 0) {
+      await message.reply(chunks[0]);
+
+      if ("send" in message.channel) {
+        for (let i = 1; i < chunks.length; i++) {
+          await (message.channel as TextBasedChannelFields).send(chunks[i]);
+        }
+      }
+    }
   }
 
   /* ---- default ruthless roast ---- */
