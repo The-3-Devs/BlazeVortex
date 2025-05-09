@@ -232,6 +232,7 @@ client.on("messageCreate", async (message: Message) => {
         }
       }
     }
+    return;
   }
   const memoryPath2 = path.join(
     __dirname,
