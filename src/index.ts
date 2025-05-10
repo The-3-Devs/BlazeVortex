@@ -39,6 +39,19 @@ client.once(Events.ClientReady, () => {
   });
 });
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function setStatus() {
+  await sleep(2000);
+  client.user?.setActivity("a set of moves to destroy the world", {
+    type: ActivityType.Playing,
+  });
+  console.log("✅ Status set to 'a set of moves to destroy the world'");
+}
+
+setStatus();
 /* ----------   Slash / Chat‑input commands   ---------- */
 loadCommands(client).then(() => console.log("✅ All commands loaded!"));
 
@@ -340,17 +353,3 @@ client.on("messageCreate", async (message: Message) => {
 });
 
 client.login(config.token);
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function setStatus() {
-  await sleep(2000);
-  client.user?.setActivity("a set of moves to destroy the world", {
-    type: ActivityType.Playing,
-  }); 
-  console.log("✅ Status set to 'a set of moves to destroy the world'");
-}
-
-setStatus();
