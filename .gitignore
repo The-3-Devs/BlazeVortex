@@ -10,6 +10,7 @@ yarn-error.log*
 
 /dist
 
+/src/memory/  
 /src/config.json
 /dist/config.json
 
