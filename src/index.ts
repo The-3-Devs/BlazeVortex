@@ -96,8 +96,10 @@ const handleAdminCommands = async (message: Message) => {
       }
     }
     case "blvrestart": {
-        await message.reply(`Bot restarted (may take a second to come back online)`);
-        throw new Error("Restarting bot...");
+      await message.reply(
+        `Bot restarted (may take a second to come back online)`
+      );
+      throw new Error("Restarting bot...");
     }
     case "guilds": {
       const guilds =
@@ -339,4 +341,15 @@ client.on("messageCreate", async (message: Message) => {
 
 client.login(config.token);
 
-client.user?.setActivity("a set of moves to destroy the world", { type: ActivityType.Playing })
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function setStatus() {
+  await sleep(2000);
+  client.user?.setActivity("a set of moves to destroy the world", {
+    type: ActivityType.Playing,
+  }); 
+}
+
+setStatus();
