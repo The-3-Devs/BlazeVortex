@@ -29,16 +29,6 @@ const client = new Client({
   ],
 });
 
-const memoryMap = new Map<string, string[]>(); // user‑id -> last 100 msgs
-client.commands = new Collection<string, Command>();
-
-client.once(Events.ClientReady, () => {
-  console.log(`✅ Ready! Logged in as ${client.user?.tag}`);
-  client.user?.setPresence({
-    status: "dnd", // 'online' | 'idle' | 'dnd' | 'invisible'
-  });
-});
-
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -51,7 +41,17 @@ async function setStatus() {
   console.log("✅ Status set to 'a set of moves to destroy the world'");
 }
 
-setStatus();
+const memoryMap = new Map<string, string[]>(); // user‑id -> last 100 msgs
+client.commands = new Collection<string, Command>();
+
+client.once(Events.ClientReady, () => {
+  console.log(`✅ Ready! Logged in as ${client.user?.tag}`);
+  client.user?.setPresence({
+    status: "dnd", // 'online' | 'idle' | 'dnd' | 'invisible'
+  });
+  setStatus();
+});
+
 /* ----------   Slash / Chat‑input commands   ---------- */
 loadCommands(client).then(() => console.log("✅ All commands loaded!"));
 
