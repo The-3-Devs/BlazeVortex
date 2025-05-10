@@ -350,6 +350,7 @@ async function setStatus() {
   client.user?.setActivity("a set of moves to destroy the world", {
     type: ActivityType.Playing,
   }); 
+  console.log("✅ Status set to 'a set of moves to destroy the world'");
 }
 
 setStatus();
