@@ -23,5 +23,5 @@ jobs:
           cd ./BlazeVortex
           git pull origin main
           npm install
-          nohup npm run start-ubuntu 2>&1 | awk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush(); }' >> out.log &
+          nohup npm run start-ubuntu 2>&1 | awk '{ print strftime("[%Y-%m-%d %I:%M:%S %p %Z]"), $0; fflush(); }' >> out.log &
         EOF
