@@ -45,7 +45,7 @@ const memoryMap = new Map<string, string[]>(); // user‑id -> last 100 msgs
 client.commands = new Collection<string, Command>();
 
 client.once(Events.ClientReady, () => {
-  console.log(`✅ Ready! Logged in as ${client.user?.tag}`);
+  console.log(`✅ Ready! Logged in as ${client.user?.tag} at ${new Date()}`);
   client.user?.setPresence({
     status: "dnd", // 'online' | 'idle' | 'dnd' | 'invisible'
   });
