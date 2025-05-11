@@ -52,6 +52,8 @@ client.once(Events.ClientReady, () => {
   setStatus();
 });
 
+//test
+
 /* ----------   Slash / Chat‑input commands   ---------- */
 loadCommands(client).then(() => console.log("✅ All commands loaded!"));
 
