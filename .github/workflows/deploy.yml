@@ -23,5 +23,5 @@ jobs:
           cd ./BlazeVortex
           git pull origin main
           npm install
-          nohup npx ts-node ./src/index.ts > out.log 2>&1 &
+          nohup npm run start-ubuntu > out.log 2>&1 &
         EOF
