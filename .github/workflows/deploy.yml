@@ -23,7 +23,7 @@ jobs:
           cd ./BlazeVortex
           git pull origin main
           npm install
-          setsid bash -c 'npm run start-ubuntu 2>&1 | awk '\''{ cmd="date +\"[%I:%M:%S %p %Z]\""; cmd | getline ts; close(cmd); print ts, $0; fflush(); }'\'' >> out.log' &
+          nohup bash -c 'npm run start-ubuntu 2>&1 | awk '\''{ cmd="date +\"[%I:%M:%S %p %Z]\""; cmd | getline ts; close(cmd); print ts, $0; fflush(); }'\'' >> out.log' </dev/null >/dev/null 2>&1 &
           echo "Server started"
           echo "Server started" >> out.log
         EOF
