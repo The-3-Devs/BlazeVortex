@@ -115,7 +115,7 @@ const handleAdminCommands = async (message: Message) => {
       await message.reply(
         `Bot restarted (may take a second to come back online)`
       );
-      console.log(chalk.bgRed.yellow('🔁 Restarting bot from command...'));
+      await console.log(chalk.bgRed.yellow('🔁 Restarting bot from command...'));
       throw new Error("Restarting bot...");
     }
     case "guilds": {
