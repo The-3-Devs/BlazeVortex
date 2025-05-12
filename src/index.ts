@@ -16,6 +16,7 @@ import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 import splitMessage from "./functions/splitmessage";
+import chalk from 'chalk';
 
 /* ----------   Setup   ---------- */
 const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
@@ -114,6 +115,7 @@ const handleAdminCommands = async (message: Message) => {
       await message.reply(
         `Bot restarted (may take a second to come back online)`
       );
+      console.log(chalk.bgRed.yellow('🔁 Restarting bot from command...'));
       throw new Error("Restarting bot...");
     }
     case "guilds": {
