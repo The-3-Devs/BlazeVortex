@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
 
     steps:
     - name: Checkout repository
@@ -21,7 +23,7 @@ jobs:
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           pkill -f "ts-node ./src/index.ts" || true
           cd ./BlazeVortex
-          git pull origin main
+          git pull
           npm install
           timestamp=$(date +"[%I:%M:%S %p %Z]")
           echo "$timestamp BlazeVortex start initiated at $timestamp 🔥 ✅ 🚀"
