@@ -1,5 +1,5 @@
 import { Command } from "../types";
-import { EmbedBuilder } from 'discord.js'; // Use EmbedBuilder instead of MessageEmbed
+import { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } from 'discord.js'; // Use EmbedBuilder instead of MessageEmbed
 
 const command: Command = {
   name: "invite",
@@ -10,15 +10,20 @@ const command: Command = {
       return await interaction.reply("Sorry, I couldn't retrieve my ID.");
     }
     const inviteLink = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=1698731708120145&scope=bot`;
+
+    const inviteButton = new ButtonBuilder()
+	  .setLabel('Invite')
+	  .setURL(inviteLink)
+	  .setStyle(ButtonStyle.Link);
+
+    const row = new ActionRowBuilder()
+			.addComponents(inviteButton);
     
     const embed = new EmbedBuilder() 
       .setColor("#0099ff")
       .setTitle("Invite the Bot")
       .setDescription(`Click the button below to invite me to your server:`)
-      .addFields(
-        { name: "Invite Link", value: `[Click me](${inviteLink})`, inline: true }
-      );
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], components: [row] });
   }
 };
 
