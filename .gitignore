@@ -15,3 +15,5 @@ yarn-error.log*
 /dist/config.json
 
 .vscode/*
+
+out.log

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "npx tsc && node dist/index.js",
     "start-windows": "powershell -Command \"while ($true) { ts-node ./src/index.ts; Write-Host 'App crashed. Restarting...' -ForegroundColor White -BackgroundColor DarkRed }\"",
-    "start-ubuntu": "while true; do ts-node ./src/index.ts || { echo '\\e[97;41m App crashed. Restarting... \\e[0m'; sleep 2; }; done"
+    "start-ubuntu": "while true; do ts-node ./src/index.ts || { echo '\\e[97;41m App crashed. Restarting... \\e[0m'; sleep 2; }; done",
+    "nodemon": "echo \"May restart on each message\" && nodemon src/index.ts --ignore ./src/memory"
   },
   "dependencies": {
     "@google/genai": "^0.9.0",
@@ -19,10 +20,10 @@
     "epxress": "0.0.1-security",
     "firebase": "^11.3.1",
     "firebase-admin": "^13.1.0",
-    "install": "^0.13.0",
-    "nodemon": "^3.1.10"
+    "install": "^0.13.0"
   },
   "devDependencies": {
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
