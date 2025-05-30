@@ -9,7 +9,7 @@ const command: Command = {
     if (!clientId) {
       return await interaction.reply("Sorry, I couldn't retrieve my ID.");
     }
-    const inviteLink = `https://discord.com/oauth2/authorize?client_id=${clientId}&scope=bot&permissions=8`;
+    const inviteLink = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=1698731708120145&scope=bot`;
     
     const embed = new EmbedBuilder() 
       .setColor("#0099ff")
