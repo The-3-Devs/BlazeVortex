@@ -7,6 +7,7 @@ import {
   Message,
   ActivityType,
   TextBasedChannelFields,
+  PresenceUpdateStatus,
 } from "discord.js";
 import config from "./config.json";
 import { loadCommands } from "./handlers/commandHandler";
@@ -37,6 +38,7 @@ async function setStatus() {
   client.user?.setActivity("a set of moves to destroy the world", {
     type: ActivityType.Playing,
   });
+  client.user?.setPresence({ activities: [{ name: 'a set of moves to destroy the world' }], status: PresenceUpdateStatus.Online });
   console.log("✅ Status set to 'a set of moves to destroy the world'");
 }
 
@@ -44,7 +46,7 @@ client.commands = new Collection<string, Command>();
 
 client.once(Events.ClientReady, () => {
   console.log(`✅ Ready! Logged in as ${client.user?.tag} at ${new Date()}`);
-  client.user?.setPresence({ status: "dnd" });
+  client.user?.setPresence({ status: "online" });
   setStatus();
 });
 
@@ -81,7 +83,8 @@ const handleAdminCommands = async (message: Message) => {
       const game = args.join(" ");
       return game
         ? (await message.reply(`🎮 Game status set to **${game}**`)) &&
-            client.user?.setActivity(game, { type: ActivityType.Playing })
+            client.user?.setActivity(game, { type: ActivityType.Playing }) &&
+            client.user.setStatus(PresenceUpdateStatus.Online)
         : message.reply("❌ Provide a game name.");
     }
     case "setstatus": {
@@ -90,7 +93,16 @@ const handleAdminCommands = async (message: Message) => {
         ? client.user?.setPresence({
             activities: [{ name: status, type: ActivityType.Playing }],
             status: "dnd",
-          }) && message.reply(`✅ Bot status set to **${status}**`)
+          }) && client.user.setStatus(PresenceUpdateStatus.Online) && message.reply(`✅ Bot status set to **${status}**`)
+        : message.reply("❌ Provide a status.");
+    }
+    case "defaultstatus": {
+      const status = "a set of moves to destroy the world";
+      return status
+        ? client.user?.setPresence({
+            activities: [{ name: status, type: ActivityType.Playing }],
+            status: "dnd",
+          }) && client.user.setStatus(PresenceUpdateStatus.Online) && message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
     }
     case "eval": {
@@ -243,6 +255,7 @@ client.on("messageCreate", async (message: Message) => {
     "guilds",
     "blvrestart",
     "addadmin",
+    "defaultstatus",
     "removeadmin",
     "debug",
     "fuckryan",
