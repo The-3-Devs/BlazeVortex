@@ -4,5 +4,5 @@
   "execMap": {
     "ts": "ts-node"
   },
-  "ignore": ["src/memory/**"]
+  "ignore": ["src/memory/**", "dist/**"]
 }
