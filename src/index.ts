@@ -122,7 +122,7 @@ const handleAdminCommands = async (message: Message) => {
       }
     }
     case "blvrestart": {
-      console.log(chalk.bgRed.yellow("🔁 Restarting bot from command..."));
+      console.log(chalk.bgYellow("🔁 Restarting bot from command..."));
       if (process.env.NODENAME === "nodemon") {
         console.log("Restarting with nodemon...");
         if (process.platform === "win32") {
@@ -139,8 +139,8 @@ const handleAdminCommands = async (message: Message) => {
           );
         }
       } else {
-        await message.reply(`Exiting for external restart...`);
-        console.log("Exiting for external restart...");
+        await message.reply(`Bot restarted (may take a second to come back online)`);
+        console.log("Bot restarted (may take a second to come back online)");
         process.exit(1);
       }
     }
