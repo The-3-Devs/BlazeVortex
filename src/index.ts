@@ -38,7 +38,10 @@ async function setStatus() {
   client.user?.setActivity("a set of moves to destroy the world", {
     type: ActivityType.Playing,
   });
-  client.user?.setPresence({ activities: [{ name: 'a set of moves to destroy the world' }], status: PresenceUpdateStatus.Online });
+  client.user?.setPresence({
+    activities: [{ name: "a set of moves to destroy the world" }],
+    status: PresenceUpdateStatus.Online,
+  });
   console.log("✅ Status set to 'a set of moves to destroy the world'");
 }
 
@@ -93,7 +96,9 @@ const handleAdminCommands = async (message: Message) => {
         ? client.user?.setPresence({
             activities: [{ name: status, type: ActivityType.Playing }],
             status: "dnd",
-          }) && client.user.setStatus(PresenceUpdateStatus.Online) && message.reply(`✅ Bot status set to **${status}**`)
+          }) &&
+            client.user.setStatus(PresenceUpdateStatus.Online) &&
+            message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
     }
     case "defaultstatus": {
@@ -102,7 +107,9 @@ const handleAdminCommands = async (message: Message) => {
         ? client.user?.setPresence({
             activities: [{ name: status, type: ActivityType.Playing }],
             status: "dnd",
-          }) && client.user.setStatus(PresenceUpdateStatus.Online) && message.reply(`✅ Bot status set to **${status}**`)
+          }) &&
+            client.user.setStatus(PresenceUpdateStatus.Online) &&
+            message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
     }
     case "eval": {
@@ -115,13 +122,27 @@ const handleAdminCommands = async (message: Message) => {
       }
     }
     case "blvrestart": {
-      await message.reply(
-        `Bot restarted (may take a second to come back online)`
-      );
-      console.log(
-        chalk.bgRed.yellow("🔁 Restarting bot from command...")
-      );
-      process.exit(1);
+      console.log(chalk.bgRed.yellow("🔁 Restarting bot from command..."));
+      if (process.env.NODENAME === "nodemon") {
+        console.log("Restarting with nodemon...");
+        if (process.platform === "win32") {
+          console.log("Windows detected. Exiting for nodemon to restart.");
+          await message.reply(
+            `Windows detected. Exiting for nodemon to restart. (May require a file change to trigger nodemon)`
+          );
+          process.exit(1);
+        } else {
+          console.log("Non-Windows detected. Sending SIGUSR2 to self.");
+          process.kill(process.pid, "SIGUSR2");
+          await message.reply(
+            `Bot restarted (may take a second to come back online)`
+          );
+        }
+      } else {
+        await message.reply(`Exiting for external restart...`);
+        console.log("Exiting for external restart...");
+        process.exit(1);
+      }
     }
     case "guilds": {
       const guilds =
@@ -159,7 +180,9 @@ const handleAdminCommands = async (message: Message) => {
         message.author.id
       );
 
-      const chunks = splitMessage("📜 **Memory for this channel:**\n" + JSON.stringify(await memoryOutput));
+      const chunks = splitMessage(
+        "📜 **Memory for this channel:**\n" + JSON.stringify(await memoryOutput)
+      );
       if (chunks.length > 0) {
         await message.reply(chunks[0]);
         if ("send" in message.channel) {
@@ -219,7 +242,7 @@ async function memorize(message: Message) {
       timestamp: new Date().toISOString(),
       user: username,
       message: content,
-      userId
+      userId,
     });
     if (memoryList.length > 10000) memoryList.shift();
 
@@ -355,11 +378,11 @@ client.on("messageCreate", async (message: Message) => {
   const chunks = splitMessage(res.text);
 
   if (chunks.length > 0) {
-      await message.reply(chunks[0]);
-      for (let i = 1; i < chunks.length; i++) {
-        await (message.channel as TextBasedChannelFields).send(chunks[i]);
-      }
+    await message.reply(chunks[0]);
+    for (let i = 1; i < chunks.length; i++) {
+      await (message.channel as TextBasedChannelFields).send(chunks[i]);
     }
+  }
 });
 
 client.login(config.token);
