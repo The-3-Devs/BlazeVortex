@@ -121,7 +121,7 @@ const handleAdminCommands = async (message: Message) => {
       console.log(
         chalk.bgRed.yellow("🔁 Restarting bot from command...")
       );
-      throw new Error("Restarting bot...");
+      process.exit(1);
     }
     case "guilds": {
       const guilds =
