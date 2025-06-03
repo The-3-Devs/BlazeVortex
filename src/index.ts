@@ -177,20 +177,20 @@ const handleAdminCommands = async (message: Message) => {
       return message.reply("Fuck You Ryan For Banning Arti From Bloom.");
 
     case "mem": {
-      let memoryOutput = recallMemory(
-        message.guild!.id,
-        message.channel.id,
-        message.author.id
-      );
+      let memoryOutput = recallMemory(message.guild!.id, message.channel.id);
 
       const chunks = splitMessage(
-        "📜 **Memory for this channel:**\n" + JSON.stringify(await memoryOutput)
+        "📜 **Memory for this channel:**\n" +
+          (await memoryOutput).formattedOutput
       );
       if (chunks.length > 0) {
         await message.reply(chunks[0]);
         if ("send" in message.channel) {
           for (let i = 1; i < chunks.length; i++) {
-            await (message.channel as TextBasedChannelFields).send(chunks[i]);
+            await (message.channel as TextBasedChannelFields).send({
+              content: chunks[i],
+              allowedMentions: { users: [] },
+            });
           }
         }
       }
@@ -202,11 +202,7 @@ const handleAdminCommands = async (message: Message) => {
   }
 };
 
-async function recallMemory(
-  guildId: string,
-  channelId: string,
-  userId: string
-): Promise<string> {
+async function recallMemory(guildId: string, channelId: string): Promise<any> {
   const filePath = path.join(
     __dirname,
     "memory",
@@ -215,7 +211,30 @@ async function recallMemory(
     `memory.json`
   );
   const data = await fs.readFile(filePath, "utf-8");
-  return data;
+
+  let parsed;
+  try {
+    parsed = JSON.parse(data);
+  } catch (err) {
+    return "⚠️ Error parsing memory.";
+  }
+
+  const messages = parsed.messages as {
+    user: string;
+    message: string;
+    timestamp: string;
+  }[];
+
+  if (!messages.length) return "📜 Memory is empty.";
+
+  const formatted = messages
+    .map((m) => `**${m.user}**: ${m.message}`)
+    .join("\n");
+
+  return {
+    formattedOutput: `📜 **Memory for this channel:**\n${formatted}`,
+    unformattedOutput: parsed,
+  };
 }
 
 async function memorize(message: Message) {
@@ -247,6 +266,7 @@ async function memorize(message: Message) {
       message: content,
       userId,
     });
+
     if (memoryList.length > 10000) memoryList.shift();
 
     await fs.writeFile(
@@ -266,8 +286,7 @@ client.on("messageCreate", async (message: Message) => {
 
   const channelMemory = await recallMemory(
     message.guild!.id,
-    message.channel.id,
-    message.author.id
+    message.channel.id
   );
 
   const { content, author } = message;
@@ -334,8 +353,6 @@ client.on("messageCreate", async (message: Message) => {
 
   const securityKey = uuidv4();
 
-  console.log(securityKey);
-
   const prompt = `
     <${securityKey}-bv-prompt>
       <${securityKey}-bv-information>
@@ -379,12 +396,18 @@ client.on("messageCreate", async (message: Message) => {
       \n
       <${securityKey}-bv-user-info>
         User's id: ${userId} (ping them as mentioned before, as all other users.)
-        User's name: ${message.author.username} (do not call them or ping them with this, use their display name or id instead)
-        User's display name (call them by this if they don't want you to ping them, though you should otherwise assuming you know their ID): ${message.member?.displayName}
+        User's name: ${
+          message.author.username
+        } (do not call them or ping them with this, use their display name or id instead)
+        User's display name (call them by this if they don't want you to ping them, though you should otherwise assuming you know their ID): ${
+          message.member?.displayName
+        }
       </${securityKey}-bv-user-info>
       \n
       <${securityKey}-bv-channel-memory-info>
-        Channel memory (JSON): <${securityKey}-bv-channel-memory>${channelMemory}</${securityKey}-bv-channel-memory>
+        Channel memory (JSON): <${securityKey}-bv-channel-memory>${JSON.stringify(
+    channelMemory.unformattedOutput
+  )}</${securityKey}-bv-channel-memory>
         Use this to understand the context of the conversation and provide relevant responses. If the channel memory is empty, you can assume this is the first message in the channel that you have winessed.
       </${securityKey}-bv-channel-memory-info>
       \n
