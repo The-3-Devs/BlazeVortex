@@ -7,7 +7,7 @@
     "dev": "npx tsc && node dist/index.js",
     "start-windows": "powershell -Command \"while ($true) { ts-node ./src/index.ts; Write-Host 'App crashed. Restarting...' -ForegroundColor White -BackgroundColor DarkRed }\"",
     "start-ubuntu": "while true; do ts-node ./src/index.ts || { echo '\\e[97;41m App crashed. Restarting... \\e[0m'; sleep 2; }; done",
-    "nodemon": "cross-env NODENAME=nodemon nodemon src/index.ts --ignore ./src/memory"
+    "nodemon": "cross-env NODENAME=nodemon nodemon src/index.ts --ignore ./src/memory/* --ignore ./dist/*"
   },
   "dependencies": {
     "@google/genai": "^0.9.0",

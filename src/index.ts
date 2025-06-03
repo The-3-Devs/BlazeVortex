@@ -179,10 +179,7 @@ const handleAdminCommands = async (message: Message) => {
     case "mem": {
       let memoryOutput = recallMemory(message.guild!.id, message.channel.id);
 
-      const chunks = splitMessage(
-        "📜 **Memory for this channel:**\n" +
-          (await memoryOutput).formattedOutput
-      );
+      const chunks = splitMessage((await memoryOutput).formattedOutput);
       if (chunks.length > 0) {
         await message.reply(chunks[0]);
         if ("send" in message.channel) {
@@ -210,6 +207,7 @@ async function recallMemory(guildId: string, channelId: string): Promise<any> {
     channelId,
     `memory.json`
   );
+
   const data = await fs.readFile(filePath, "utf-8");
 
   let parsed;
@@ -228,13 +226,13 @@ async function recallMemory(guildId: string, channelId: string): Promise<any> {
   if (!messages.length) return "📜 Memory is empty.";
 
   const formatted = messages
-    .map((m) => `**${m.user}**: ${m.message}`)
-    .join("\n");
+  .map((m) => `${m.user}: ${m.message}`)
+  .join("\n");
 
-  return {
-    formattedOutput: `📜 **Memory for this channel:**\n${formatted}`,
-    unformattedOutput: parsed,
-  };
+return {
+  formattedOutput: `📜 **Memory for this channel:**\n\`\`\`\n${formatted}\n\`\`\``,
+  unformattedOutput: parsed,
+};
 }
 
 async function memorize(message: Message) {
