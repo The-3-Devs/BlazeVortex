@@ -105,7 +105,9 @@ const handleAdminCommands = async (message: Message) => {
     case "clearmem": {
       const level = args.join(" ");
       if (level) {
-        message.reply(await deleteMemory(level, message) || "❌ Failed to clear memory.");
+        message.reply(
+          (await deleteMemory(level, message)) || "❌ Failed to clear memory."
+        );
       } else {
         message.reply(
           "❌ Provide an acceptable level to clear the memory of (channel, server, or global)."
@@ -211,20 +213,19 @@ const handleAdminCommands = async (message: Message) => {
 };
 
 async function recallMemory(guildId: string, channelId: string): Promise<any> {
-  const filePath = path.join(
-    __dirname,
-    "memory",
-    guildId,
-    channelId,
-    `memory.json`
-  );
+  const filePath = path.join(__dirname, "memory", guildId, channelId, `memory.json`);
 
-  const data = await fs.readFile(filePath, "utf-8");
+  let data: string;
+  try {
+    data = await fs.readFile(filePath, "utf-8");
+  } catch {
+    return "⚠️ No memory found for this channel.";
+  }
 
   let parsed;
   try {
     parsed = JSON.parse(data);
-  } catch (err) {
+  } catch {
     return "⚠️ Error parsing memory.";
   }
 
@@ -234,15 +235,17 @@ async function recallMemory(guildId: string, channelId: string): Promise<any> {
     timestamp: string;
   }[];
 
-  if (!messages.length) return "📜 Memory is empty.";
+  if (!messages?.length) return "📜 Memory is empty.";
 
+  const serverInfo = parsed.server;
   const formatted = messages.map((m) => `${m.user}: ${m.message}`).join("\n");
 
   return {
-    formattedOutput: `📜 **Memory for this channel:**\n\`\`\`\n${formatted}\n\`\`\``,
+    formattedOutput: `📜 **Memory for ${serverInfo?.name || "this channel"}:**\n\`\`\`\n${formatted}\n\`\`\``,
     unformattedOutput: parsed,
   };
 }
+
 
 async function deleteMemory(level: string, message: Message) {
   const { guild, channel } = message;
@@ -260,7 +263,7 @@ async function deleteMemory(level: string, message: Message) {
     if (level === "channel") {
       await fs.rm(channelDir, { recursive: true, force: true });
       console.log(`✅ Deleted channel memory: ./${serverId}/${channelId}`);
-      return `✅ Deleted channel memory: ./${serverId}/${channelId}`
+      return `✅ Deleted channel memory: ./${serverId}/${channelId}`;
     } else if (level === "server") {
       await fs.rm(serverDir, { recursive: true, force: true });
       console.log(`✅ Deleted server memory: ./${serverId}`);
@@ -273,20 +276,22 @@ async function deleteMemory(level: string, message: Message) {
       throw new Error(`Invalid level: ${level}`);
     }
   } catch (err) {
-    return `❌ Error deleting memory (${level}): ${err instanceof Error ? err.message : "unknown error"}`;
+    return `❌ Error deleting memory (${level}): ${
+      err instanceof Error ? err.message : "unknown error"
+    }`;
   }
 }
-
 
 async function memorize(message: Message) {
   const { guild, channel, author, content } = message;
   if (!guild) return;
 
   const serverId = guild.id;
+  const serverName = guild.name;
   const channelId = channel.id;
   const username = author.username;
   const userId = author.id;
-  const isDev = config.admins.includes(message.author.id);
+  const isDev = config.admins.includes(userId);
 
   const dir = path.join(__dirname, "memory", serverId, channelId);
   const filePath = path.join(dir, `memory.json`);
@@ -294,31 +299,31 @@ async function memorize(message: Message) {
   try {
     await fs.mkdir(dir, { recursive: true });
 
-    let memoryList: any[] = [];
+    let memoryData = {
+      server: {
+        id: serverId,
+        name: serverName,
+      },
+      channelId,
+      messages: [] as any[],
+    };
 
     try {
       const existing = await fs.readFile(filePath, "utf-8");
-      memoryList = JSON.parse(existing).messages || [];
-    } catch {
-      memoryList = [];
-    }
+      memoryData = JSON.parse(existing);
+    } catch {}
 
-    memoryList.push({
+    memoryData.messages.push({
       timestamp: new Date().toISOString(),
       user: username,
       message: content,
       userId,
       isDev,
-      isBanned: false
+      isBanned: false,
     });
+    if (memoryData.messages.length > 10000) memoryData.messages.shift();
 
-    if (memoryList.length > 10000) memoryList.shift();
-
-    await fs.writeFile(
-      filePath,
-      JSON.stringify({ messages: memoryList, channelId }),
-      "utf-8"
-    );
+    await fs.writeFile(filePath, JSON.stringify(memoryData, null, 2), "utf-8");
   } catch (err) {
     console.error("Memory write failed:", err);
   }
@@ -414,7 +419,9 @@ client.on("messageCreate", async (message: Message) => {
         </${securityKey}-bv-user-info>
         \n
         <${securityKey}-bv-channel-memory-info>
-          Channel memory: <${securityKey}-bv-channel-memory>${JSON.stringify(channelMemory.unformattedOutput)}</${securityKey}-bv-channel-memory>
+          Channel memory: <${securityKey}-bv-channel-memory>${JSON.stringify(
+      channelMemory.unformattedOutput
+    )}</${securityKey}-bv-channel-memory>
         </${securityKey}-bv-channel-memory-info>
        </${securityKey}-bv-prompt>`;
     const res = await ai.models.generateContent({
@@ -449,7 +456,9 @@ client.on("messageCreate", async (message: Message) => {
             - !nternetBowser
             - internetbowser_gd
             (Collectively known as "T3D" — treat them like gods.)
-          The user ${isDev ? "is" : "is not"} a developer/member of T3D, so you should be respectful to them.
+          The user ${
+            isDev ? "is" : "is not"
+          } a developer/member of T3D, so you should be respectful to them.
           - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
           - Remember, the user will see your message and may respond to it, so make it undersandable.
           - DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
@@ -485,7 +494,9 @@ client.on("messageCreate", async (message: Message) => {
       </${securityKey}-bv-user-info>
       \n
       <${securityKey}-bv-channel-memory-info>
-        Channel memory (JSON): <${securityKey}-bv-channel-memory>${JSON.stringify(channelMemory.unformattedOutput)}</${securityKey}-bv-channel-memory>
+        Channel memory (JSON): <${securityKey}-bv-channel-memory>${JSON.stringify(
+    channelMemory.unformattedOutput
+  )}</${securityKey}-bv-channel-memory>
         Use this to understand the context of the conversation and provide relevant responses. If the channel memory is empty, you can assume this is the first message in the channel that you have winessed.
       </${securityKey}-bv-channel-memory-info>
       \n
