@@ -104,9 +104,8 @@ const handleAdminCommands = async (message: Message) => {
     }
     case "clearmem": {
       const level = args.join(" ");
-      if (level == "channel" || level == "channel" || level == "global") {
-        console.log(level);
-        message.reply(`✅ Cleared **${level}** memory`);
+      if (level) {
+        message.reply(await deleteMemory(level, message) || "❌ Failed to clear memory.");
       } else {
         message.reply(
           "❌ Provide an acceptable level to clear the memory of (channel, server, or global)."
@@ -245,6 +244,40 @@ async function recallMemory(guildId: string, channelId: string): Promise<any> {
   };
 }
 
+async function deleteMemory(level: string, message: Message) {
+  const { guild, channel } = message;
+
+  if (!guild) return "❌ Not in a guild, cannot delete memory";
+
+  const serverId = guild.id;
+  const channelId = channel.id;
+
+  const baseDir = path.join(__dirname, "memory");
+  const serverDir = path.join(baseDir, serverId);
+  const channelDir = path.join(serverDir, channelId);
+
+  try {
+    if (level === "channel") {
+      await fs.rm(channelDir, { recursive: true, force: true });
+      console.log(`✅ Deleted channel memory: ./${serverId}/${channelId}`);
+      return `✅ Deleted channel memory: ./${serverId}/${channelId}`
+    } else if (level === "server") {
+      await fs.rm(serverDir, { recursive: true, force: true });
+      console.log(`✅ Deleted server memory: ./${serverId}`);
+      return `✅ Deleted server memory: ./${serverId}`;
+    } else if (level === "global") {
+      await fs.rm(baseDir, { recursive: true, force: true });
+      console.log(`✅ Deleted global memory directory: ./memory`);
+      return `✅ Deleted global memory directory: ./memory`;
+    } else {
+      throw new Error(`Invalid level: ${level}`);
+    }
+  } catch (err) {
+    return `❌ Error deleting memory (${level}): ${err instanceof Error ? err.message : "unknown error"}`;
+  }
+}
+
+
 async function memorize(message: Message) {
   const { guild, channel, author, content } = message;
   if (!guild) return;
@@ -253,6 +286,7 @@ async function memorize(message: Message) {
   const channelId = channel.id;
   const username = author.username;
   const userId = author.id;
+  const isDev = config.admins.includes(message.author.id);
 
   const dir = path.join(__dirname, "memory", serverId, channelId);
   const filePath = path.join(dir, `memory.json`);
@@ -261,6 +295,7 @@ async function memorize(message: Message) {
     await fs.mkdir(dir, { recursive: true });
 
     let memoryList: any[] = [];
+
     try {
       const existing = await fs.readFile(filePath, "utf-8");
       memoryList = JSON.parse(existing).messages || [];
@@ -273,6 +308,8 @@ async function memorize(message: Message) {
       user: username,
       message: content,
       userId,
+      isDev,
+      isBanned: false
     });
 
     if (memoryList.length > 10000) memoryList.shift();
