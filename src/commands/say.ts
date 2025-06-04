@@ -1,22 +1,26 @@
+import { ChatInputCommandInteraction, Client } from "discord.js";
 import { Command } from "../types";
 
 const command: Command = {
   name: "say",
   description: "Replies with whatever you want me to say!",
-  // it says the message in the argument, but it doesen't add it to the command list right..?
-  // like it adds a /say command with no arguments, but this would expect one.
-  // this is a problemo with discord not our problem
-  execute: async (interaction) => {
-    // Get the content from the user's input
-    const userMessage = interaction.options.getString("message"); // here these are the args
+  options: [
+    {
+      name: "message",
+      description: "The message to say",
+      type: 3, // STRING
+      required: true,
+    },
+  ],
+  execute: async (interaction: ChatInputCommandInteraction, _client: Client) => {
+    const message = interaction.options.getString("message");
 
-    
-
-    if (!userMessage) {
-      return await interaction.reply("You must provide something for me to say!");
+    if (!message) {
+      await interaction.reply("You must provide a message.");
+      return;
     }
 
-    await interaction.reply(userMessage);
+    await interaction.reply(message);
   },
 };
 

@@ -19,6 +19,7 @@ const command: Command = {
         { name: "/joke", value: "Tells a random joke." },
         // { name: "/kick", value: "Kicks a user from the server." },
         { name: "/me", value: "Shows the bot's about me and avatar!" },
+        { name: "/setup", value: "Allows server admins to set up the bot in their server" },
         { name: "/ping", value: "Replies with 'Pong!'" },
        // { name: "/xp", value: "Displays the user's current XP or level." }
       )
