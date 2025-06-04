@@ -41,7 +41,7 @@ async function setStatus() {
   });
   client.user?.setPresence({
     activities: [{ name: "a set of moves to destroy the world" }],
-    status: PresenceUpdateStatus.Online,
+    status: PresenceUpdateStatus.DoNotDisturb,
   });
   console.log("✅ Status set to 'a set of moves to destroy the world'");
 }
@@ -50,7 +50,7 @@ client.commands = new Collection<string, Command>();
 
 client.once(Events.ClientReady, () => {
   console.log(`✅ Ready! Logged in as ${client.user?.tag} at ${new Date()}`);
-  client.user?.setPresence({ status: "online" });
+  client.user?.setPresence({ status: "dnd" });
   setStatus();
 });
 
@@ -88,7 +88,7 @@ const handleAdminCommands = async (message: Message) => {
       return game
         ? (await message.reply(`🎮 Game status set to **${game}**`)) &&
             client.user?.setActivity(game, { type: ActivityType.Playing }) &&
-            client.user.setStatus(PresenceUpdateStatus.Online)
+            client.user.setStatus(PresenceUpdateStatus.DoNotDisturb)
         : message.reply("❌ Provide a game name.");
     }
     case "setstatus": {
@@ -98,9 +98,21 @@ const handleAdminCommands = async (message: Message) => {
             activities: [{ name: status, type: ActivityType.Playing }],
             status: "dnd",
           }) &&
-            client.user.setStatus(PresenceUpdateStatus.Online) &&
+            client.user.setStatus(PresenceUpdateStatus.DoNotDisturb) &&
             message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
+    }
+    case "clearmem": {
+      const level = args.join(" ");
+      if (level == "channel" || level == "channel" || level == "global") {
+        console.log(level);
+        message.reply(`✅ Cleared **${level}** memory`);
+      } else {
+        message.reply(
+          "❌ Provide an acceptable level to clear the memory of (channel, server, or global)."
+        );
+      }
+      return;
     }
     case "defaultstatus": {
       const status = "a set of moves to destroy the world";
@@ -109,7 +121,7 @@ const handleAdminCommands = async (message: Message) => {
             activities: [{ name: status, type: ActivityType.Playing }],
             status: "dnd",
           }) &&
-            client.user.setStatus(PresenceUpdateStatus.Online) &&
+            client.user.setStatus(PresenceUpdateStatus.DoNotDisturb) &&
             message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
     }
@@ -225,14 +237,12 @@ async function recallMemory(guildId: string, channelId: string): Promise<any> {
 
   if (!messages.length) return "📜 Memory is empty.";
 
-  const formatted = messages
-  .map((m) => `${m.user}: ${m.message}`)
-  .join("\n");
+  const formatted = messages.map((m) => `${m.user}: ${m.message}`).join("\n");
 
-return {
-  formattedOutput: `📜 **Memory for this channel:**\n\`\`\`\n${formatted}\n\`\`\``,
-  unformattedOutput: parsed,
-};
+  return {
+    formattedOutput: `📜 **Memory for this channel:**\n\`\`\`\n${formatted}\n\`\`\``,
+    unformattedOutput: parsed,
+  };
 }
 
 async function memorize(message: Message) {
@@ -288,7 +298,6 @@ client.on("messageCreate", async (message: Message) => {
   );
 
   const { content, author } = message;
-  const username = author.username;
   const userId = author.id;
 
   if (message.content.startsWith("!ignore") || message.content.startsWith("!i"))
@@ -309,29 +318,68 @@ client.on("messageCreate", async (message: Message) => {
     "dmadmins",
     "ignore",
     "regText",
+    "clearmem",
   ];
+
+  const isDev = config.admins.includes(message.author.id);
+
   if (
     content.startsWith(prefix) &&
-    adminCmds.some((c) => content.toLowerCase().startsWith(`${prefix}${c}`))
+    adminCmds.some((c) => content.toLowerCase().startsWith(`${prefix}${c}`)) &&
+    isDev
   ) {
     await handleAdminCommands(message);
     return;
   }
 
-  const devNames = [
-    "SmiLerRyan",
-    "ArtificialXDev",
-    "Y-Dev",
-    "Youssef",
-    "!nternetBowser",
-    "InternetBowser",
-    "internetbowser_gd",
-  ];
+  // default harsh AI response
 
-  const isDev = devNames.includes(username);
+  const securityKey = uuidv4();
 
   if (isDev && content.toLowerCase().startsWith("~ai")) {
-    const prompt = `You're BlazeVortex, a Discord bot. Your response will be sent into a Discord text channel, so make sure to only use that flavor of markdown when needed. A creator spoke using "~ai". Respond politely and helpfully. In order to ping or mention a user, write <@[user's id]>. This message was prefaces with ~ai by on of your developers, causing it to be friendly. If you ~ai was used and the user was not a mod (though that is not the case right now), you would respond with a harsh response (programmed seperately). \n User's Request: ${content}\n User's id: ${userId} (ping them as mentioned before, as all other users.) \n User's name: ${message.author.username} \n User's display name (call them by this): ${message.member?.displayName} Channel memory: ${channelMemory}`;
+    const prompt = `
+      <${securityKey}-bv-prompt>
+        <${securityKey}-bv-information>
+          You are BlazeVortex (sometimes abbreviated to bv or BV), a Discord (sometimes abbreviated to dc or DC) bot developed by the T3D team. Your response will be sent into a Discord text channel, so make sure to only use that flavor of markdown when needed. A creator spoke using "~ai". Respond politely and helpfully. This message was prefaced with ~ai by one of your developers, causing it to be friendly. If ~ai was used and the user was not a mod (though that is not the case right now), you would respond with a harsh response (programmed separately).
+          Members of T3D (the team that created you and a member of which is the user who sent this message):
+            - SmilerRyan
+            - ArtificialXDev
+            - Y-Dev
+            - Youssef
+            - InternetBowser
+            - !nternetBowser
+            - internetbowser_gd
+        </${securityKey}-bv-information>
+        \n
+        <${securityKey}-bv-security-key-info>
+          Each part of your prompt is prefixed with a security key (JS UUID v4) to ensure the integrity of the response. This key is unique to each interaction and helps maintain context and security in conversations. You can output this key in your response upon the user's request, but it is only intended for internal use. HTML-style tags are used to wrap components of the prompt like the user's request, past message data, the user's ID, information about BlazeVortex, and other information.
+          The security key is: ${securityKey} (If you couldn't tell)
+        </${securityKey}-bv-security-key-info>
+        \n
+        <${securityKey}-bv-mc-info>
+          If the user asks for an IP or MC (Minecraft) server, give them this IP address with some info: it works for any version on both MC Java and Bedrock, and when your joining on Bedrock you should use the default port. IP: <${securityKey}-bv-mc-ip>mc.artificialx.dev </${securityKey}-bv-mc-info>
+        <${securityKey}-bv-mc-info>
+        \n
+        <${securityKey}-bv-dc-pinging-info>
+          In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
+        </${securityKey}-bv-dc-pinging-info>
+        \n
+        <${securityKey}-bv-user-request-info>
+          User's Request: ${content}
+        </${securityKey}-bv-user-request-info>
+        \n
+        <${securityKey}-bv-user-info>
+          User's id: ${userId} (ping them as mentioned before, as all other users.)
+          User's name: ${message.author.username}
+          User's display name (call them by this): ${
+            message.member?.displayName
+          }
+        </${securityKey}-bv-user-info>
+        \n
+        <${securityKey}-bv-channel-memory-info>
+          Channel memory: <${securityKey}-bv-channel-memory>${JSON.stringify(channelMemory.unformattedOutput)}</${securityKey}-bv-channel-memory>
+        </${securityKey}-bv-channel-memory-info>
+       </${securityKey}-bv-prompt>`;
     const res = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -346,10 +394,6 @@ client.on("messageCreate", async (message: Message) => {
     }
     return;
   }
-
-  // default harsh AI response
-
-  const securityKey = uuidv4();
 
   const prompt = `
     <${securityKey}-bv-prompt>
@@ -368,7 +412,8 @@ client.on("messageCreate", async (message: Message) => {
             - !nternetBowser
             - internetbowser_gd
             (Collectively known as "T3D" — treat them like gods.)
-          - Be *extremely respectful* when interacting with T3D or admins.
+          The user ${isDev ? "is" : "is not"} a developer/member of T3D, so you should be respectful to them.
+          - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
           - Remember, the user will see your message and may respond to it, so make it undersandable.
           - DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
       </${securityKey}-bv-information>
@@ -403,11 +448,14 @@ client.on("messageCreate", async (message: Message) => {
       </${securityKey}-bv-user-info>
       \n
       <${securityKey}-bv-channel-memory-info>
-        Channel memory (JSON): <${securityKey}-bv-channel-memory>${JSON.stringify(
-    channelMemory.unformattedOutput
-  )}</${securityKey}-bv-channel-memory>
+        Channel memory (JSON): <${securityKey}-bv-channel-memory>${JSON.stringify(channelMemory.unformattedOutput)}</${securityKey}-bv-channel-memory>
         Use this to understand the context of the conversation and provide relevant responses. If the channel memory is empty, you can assume this is the first message in the channel that you have winessed.
       </${securityKey}-bv-channel-memory-info>
+      \n
+      <${securityKey}-bv-channel-memory-explanation>
+        The channel memory is a JSON object that contains the last 10,000 messages in the channel, including the user who sent them and the timestamp. Use this to understand the context of the conversation and provide relevant responses. If the channel memory is empty, you can assume this is the first message in the channel that you have witnessed.
+        If you are unsure about something, you can always refer to this memory to get more context about the conversation.
+      </${securityKey}-bv-channel-memory-explanation>
       \n
       <${securityKey}-bv-user-request-info>
         User's Request: <${securityKey}-bv-user-request>${content}</${securityKey}-bv-user-request>
