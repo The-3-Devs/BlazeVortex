@@ -238,6 +238,12 @@ const handleAdminCommands = async (message: Message) => {
       const info = `⏳ Uptime: ${client.uptime}ms\n🏛️ Guilds: ${client.guilds.cache.size}\n👥 Users: ${client.users.cache.size}\n `;
       return message.reply(`🔍 Debug Info:\n${info}`);
     }
+    case "uptime": {
+      const startedDate = new Date(Date.now() - (client.uptime || 0));
+      const utcString = startedDate.toUTCString()
+      const info = `⏳ Uptime: ${client.uptime}ms \n 🕒 Started time: ${utcString}`;
+      return message.reply(`🔍 Uptime Info:\n${info}`);
+    }
     case "fuckryan":
       return message.reply("Fuck You Ryan For Banning Arti From Bloom.");
 
@@ -428,6 +434,7 @@ client.on("messageCreate", async (message: Message) => {
     "defaultstatus",
     "removeadmin",
     "debug",
+    "uptime",
     "fuckryan",
     "mem",
     "dmadmins",
