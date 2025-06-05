@@ -571,7 +571,8 @@ client.on("messageCreate", async (message: Message) => {
         \n
         <${securityKey}-bv-dc-pinging-info>
           In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
-        </${securityKey}-bv-dc-pinging-info>
+          The current user's ID is ${userId} so to ping them write <@${userId}>. Make sure to NEVER write in this format: <@!nternetBowser>, that will not be formatted properly
+          </${securityKey}-bv-dc-pinging-info>
         \n
         <${securityKey}-bv-user-request-info>
           User's Request: ${content}
