@@ -87,19 +87,19 @@ const handleAdminCommands = async (message: Message) => {
       const game = args.join(" ");
       return game
         ? (await message.reply(`🎮 Game status set to **${game}**`)) &&
-            client.user?.setActivity(game, { type: ActivityType.Playing }) &&
-            client.user.setStatus(PresenceUpdateStatus.DoNotDisturb)
+        client.user?.setActivity(game, { type: ActivityType.Playing }) &&
+        client.user.setStatus(PresenceUpdateStatus.DoNotDisturb)
         : message.reply("❌ Provide a game name.");
     }
     case "setstatus": {
       const status = args.join(" ");
       return status
         ? client.user?.setPresence({
-            activities: [{ name: status, type: ActivityType.Playing }],
-            status: "dnd",
-          }) &&
-            client.user.setStatus(PresenceUpdateStatus.DoNotDisturb) &&
-            message.reply(`✅ Bot status set to **${status}**`)
+          activities: [{ name: status, type: ActivityType.Playing }],
+          status: "dnd",
+        }) &&
+        client.user.setStatus(PresenceUpdateStatus.DoNotDisturb) &&
+        message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
     }
     case "clearmem": {
@@ -171,11 +171,11 @@ const handleAdminCommands = async (message: Message) => {
       const status = "a set of moves to destroy the world";
       return status
         ? client.user?.setPresence({
-            activities: [{ name: status, type: ActivityType.Playing }],
-            status: "dnd",
-          }) &&
-            client.user.setStatus(PresenceUpdateStatus.DoNotDisturb) &&
-            message.reply(`✅ Bot status set to **${status}**`)
+          activities: [{ name: status, type: ActivityType.Playing }],
+          status: "dnd",
+        }) &&
+        client.user.setStatus(PresenceUpdateStatus.DoNotDisturb) &&
+        message.reply(`✅ Bot status set to **${status}**`)
         : message.reply("❌ Provide a status.");
     }
     case "eval": {
@@ -299,9 +299,8 @@ async function recallMemory(guildId: string, channelId: string): Promise<any> {
   const formatted = messages.map((m) => `${m.user}: ${m.message}`).join("\n");
 
   return {
-    formattedOutput: `📜 **Memory for ${
-      serverInfo?.name || "this channel"
-    }:**\n\`\`\`\n${formatted}\n\`\`\``,
+    formattedOutput: `📜 **Memory for ${serverInfo?.name || "this channel"
+      }:**\n\`\`\`\n${formatted}\n\`\`\``,
     unformattedOutput: parsed,
   };
 }
@@ -324,7 +323,7 @@ async function deleteMemory(level: string, message: Message) {
       try {
         const flag = await fs.readFile(flagFile, "utf-8");
         wasDisabled = JSON.parse(flag)?.disabled === true;
-      } catch {}
+      } catch { }
 
       await fs.rm(channelDir, { recursive: true, force: true });
 
@@ -348,9 +347,8 @@ async function deleteMemory(level: string, message: Message) {
       throw new Error(`Invalid level: ${level}`);
     }
   } catch (err) {
-    return `❌ Error deleting memory (${level}): ${
-      err instanceof Error ? err.message : "unknown error"
-    }`;
+    return `❌ Error deleting memory (${level}): ${err instanceof Error ? err.message : "unknown error"
+      }`;
   }
 }
 
@@ -384,7 +382,7 @@ async function memorize(message: Message) {
     try {
       const existing = await fs.readFile(filePath, "utf-8");
       memoryData = JSON.parse(existing);
-    } catch {}
+    } catch { }
 
     memoryData.messages.push({
       timestamp: new Date().toISOString(),
@@ -582,21 +580,29 @@ client.on("messageCreate", async (message: Message) => {
         <${securityKey}-bv-user-info>
           User's id: ${userId} (ping them as mentioned before, as all other users.)
           User's name: ${message.author.username}
-          User's display name (call them by this): ${
-            message.member?.displayName
-          }
+          User's display name (call them by this): ${message.member?.displayName
+      }
         </${securityKey}-bv-user-info>
         \n
         <${securityKey}-bv-channel-memory-info>
           Channel memory: <${securityKey}-bv-channel-memory>${JSON.stringify(
-      channelMemory.unformattedOutput
-    )}</${securityKey}-bv-channel-memory>
+        channelMemory.unformattedOutput
+      )}</${securityKey}-bv-channel-memory>
         </${securityKey}-bv-channel-memory-info>
        </${securityKey}-bv-prompt>`;
-    const res = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    });
+
+    let res;
+
+    try {
+      res = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+      });
+    } catch (error) {
+      console.error("AI request failed:", error);
+      res = { text: "**⚠️ AI failed to respond due to model overload. **" };
+    }
+
 
     const chunks = splitMessage(res.text ?? "No response");
     if (chunks.length > 0) {
@@ -625,9 +631,8 @@ client.on("messageCreate", async (message: Message) => {
             - !nternetBowser
             - internetbowser_gd
             (Collectively known as "T3D" — treat them like gods.)
-          The user ${
-            isDev ? "is" : "is not"
-          } a developer/member of T3D, so you should be respectful to them.
+          The user ${isDev ? "is" : "is not"
+    } a developer/member of T3D, so you should be respectful to them.
           - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
           - Remember, the user will see your message and may respond to it, so make it undersandable.
           - DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
@@ -654,18 +659,16 @@ client.on("messageCreate", async (message: Message) => {
       \n
       <${securityKey}-bv-user-info>
         User's id: ${userId} (ping them as mentioned before, as all other users.)
-        User's name: ${
-          message.author.username
-        } (do not call them or ping them with this, use their display name or id instead)
-        User's display name (call them by this if they don't want you to ping them, though you should otherwise assuming you know their ID): ${
-          message.member?.displayName
-        }
+        User's name: ${message.author.username
+    } (do not call them or ping them with this, use their display name or id instead)
+        User's display name (call them by this if they don't want you to ping them, though you should otherwise assuming you know their ID): ${message.member?.displayName
+    }
       </${securityKey}-bv-user-info>
       \n
       <${securityKey}-bv-channel-memory-info>
         Channel memory (JSON): <${securityKey}-bv-channel-memory>${JSON.stringify(
-    channelMemory.unformattedOutput
-  )}</${securityKey}-bv-channel-memory>
+      channelMemory.unformattedOutput
+    )}</${securityKey}-bv-channel-memory>
         Use this to understand the context of the conversation and provide relevant responses. If the channel memory is empty, you can assume this is the first message in the channel that you have winessed.
       </${securityKey}-bv-channel-memory-info>
       \n
@@ -685,10 +688,17 @@ client.on("messageCreate", async (message: Message) => {
     </${securityKey}-bv-prompt>
   `;
 
-  const res = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: prompt,
-  });
+  let res;
+
+  try {
+    res = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt
+    });
+  } catch (error) {
+    console.error("AI request failed:", error);
+    res = { text: "**⚠️ AI failed to respond due to model overload. **" };
+  }
 
   // @ts-ignore
   const chunks = splitMessage(res.text);
