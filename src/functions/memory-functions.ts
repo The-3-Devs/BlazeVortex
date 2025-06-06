@@ -28,7 +28,7 @@ export async function memorize(message: Message) {
   try {
     await fs.mkdir(dir, { recursive: true });
 
-    let memoryData: any = {};
+    let memoryData: any = { messages: [], server: { id: serverId, name: serverName } };
 
     try {
       const existing = await fs.readFile(filePath, "utf-8");
@@ -36,7 +36,6 @@ export async function memorize(message: Message) {
     } catch {}
 
     if (!memoryData.disabled && !(memoryData.disabled == true)) {
-      console.log("Channel is not disabled or enabled");
       memoryData.disabled = false;
     }
 
