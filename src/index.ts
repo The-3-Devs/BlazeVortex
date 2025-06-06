@@ -145,7 +145,7 @@ client.on("messageCreate", async (message: Message) => {
     const channelId = channel.id;
     const isDisabled = await fs
       .readFile(
-        path.join(__dirname, "memory", "servers", serverId, channelId, "disabled.json"),
+        path.join(__dirname, "memory", "servers", serverId, channelId, "memory.json"),
         "utf-8"
       )
       .then((data) => JSON.parse(data)?.disabled)

@@ -1,4 +1,10 @@
-import { Message, ActivityType, PresenceUpdateStatus, TextBasedChannelFields, Client } from "discord.js";
+import {
+  Message,
+  ActivityType,
+  PresenceUpdateStatus,
+  TextBasedChannelFields,
+  Client,
+} from "discord.js";
 import fs from "fs/promises";
 import path from "path";
 import config from "../config.json";
@@ -6,7 +12,11 @@ import chalk from "chalk";
 import { deleteMemory, recallMemory } from "./memory-functions";
 import splitMessage from "./splitmessage";
 
-export const handleAdminCommands = async (message: Message, prefix: string, client: Client) => {
+export const handleAdminCommands = async (
+  message: Message,
+  prefix: string,
+  client: Client
+) => {
   if (!message.content.startsWith(prefix)) return;
   if (!config.admins.includes(message.author.id))
     return message.reply("Only admins can use this command.");
@@ -58,16 +68,30 @@ export const handleAdminCommands = async (message: Message, prefix: string, clie
 
       const serverId = guild.id;
       const channelId = channel.id;
-      const dir = path.join(__dirname, "..", "memory", "servers", serverId, channelId);
-      const flagFile = path.join(dir, "disabled.json");
+      const dir = path.join(
+        __dirname,
+        "..",
+        "memory",
+        "servers",
+        serverId,
+        channelId
+      );
+      const memoryFile = path.join(dir, "memory.json");
 
       try {
         await fs.mkdir(dir, { recursive: true });
-        await fs.writeFile(
-          flagFile,
-          JSON.stringify({ disabled: true }),
-          "utf-8"
-        );
+
+        let data: any = {};
+        try {
+          const existing = await fs.readFile(memoryFile, "utf-8");
+          data = JSON.parse(existing);
+        } catch {
+          //just use empty object idc
+        }
+
+        data.disabled = true;
+        await fs.writeFile(memoryFile, JSON.stringify(data, null, 2), "utf-8");
+
         message.reply("🔕 This channel is now disabled for responses.");
       } catch (err) {
         console.error("Failed to disable channel:", err);
@@ -75,6 +99,7 @@ export const handleAdminCommands = async (message: Message, prefix: string, clie
       }
       return;
     }
+
     case "enablechannel": {
       const { guild, channel } = message;
       if (!guild) {
@@ -84,18 +109,28 @@ export const handleAdminCommands = async (message: Message, prefix: string, clie
 
       const serverId = guild.id;
       const channelId = channel.id;
-      const flagFile = path.join(
+      const memoryFile = path.join(
         __dirname,
         "..",
         "memory",
         "servers",
         serverId,
         channelId,
-        "disabled.json"
+        "memory.json"
       );
 
       try {
-        await fs.rm(flagFile, { force: true });
+        let data: any = {};
+        try {
+          const existing = await fs.readFile(memoryFile, "utf-8");
+          data = JSON.parse(existing);
+        } catch {
+          //just use empty object idc
+        }
+
+        data.disabled = false;
+        await fs.writeFile(memoryFile, JSON.stringify(data, null, 2), "utf-8");
+
         message.reply("✅ This channel is now enabled for responses.");
       } catch (err) {
         console.error("Failed to enable channel:", err);
@@ -206,63 +241,91 @@ export const handleAdminCommands = async (message: Message, prefix: string, clie
   }
 };
 
-export async function handleServerAdminCommands(message: Message, prefix: string) {
+export async function handleServerAdminCommands(
+  message: Message,
+  prefix: string
+) {
   const [command] = message.content.slice(prefix.length).trim().split(/\s+/);
 
   switch (command.toLowerCase()) {
-        case "disablechannel": {
-          const { guild, channel } = message;
-          if (!guild) {
-            message.reply("❌ This command can only be used in a server.");
-            return;
-          }
-  
-          const serverId = guild.id;
-          const channelId = channel.id;
-          const dir = path.join(__dirname, "..", "memory", "servers", serverId, channelId);
-          const flagFile = path.join(dir, "disabled.json");
-  
-          try {
-            await fs.mkdir(dir, { recursive: true });
-            await fs.writeFile(
-              flagFile,
-              JSON.stringify({ disabled: true }),
-              "utf-8"
-            );
-            message.reply("🔕 This channel is now disabled for responses.");
-          } catch (err) {
-            console.error("Failed to disable channel:", err);
-            message.reply("❌ Failed to disable this channel.");
-          }
-          return;
-        }
-        case "enablechannel": {
-          const { guild, channel } = message;
-          if (!guild) {
-            message.reply("❌ This command can only be used in a server.");
-            return;
-          }
-  
-          const serverId = guild.id;
-          const channelId = channel.id;
-          const flagFile = path.join(
-            __dirname,
-            "..",
-            "memory",
-            "servers",
-            serverId,
-            channelId,
-            "disabled.json"
-          );
-  
-          try {
-            await fs.rm(flagFile, { force: true });
-            message.reply("✅ This channel is now enabled for responses.");
-          } catch (err) {
-            console.error("Failed to enable channel:", err);
-            message.reply("❌ Failed to enable this channel.");
-          }
-          return;
-        }
+    case "disablechannel": {
+      const { guild, channel } = message;
+      if (!guild) {
+        message.reply("❌ This command can only be used in a server.");
+        return;
       }
+
+      const serverId = guild.id;
+      const channelId = channel.id;
+      const dir = path.join(
+        __dirname,
+        "..",
+        "memory",
+        "servers",
+        serverId,
+        channelId
+      );
+      const memoryFile = path.join(dir, "memory.json");
+
+      try {
+        await fs.mkdir(dir, { recursive: true });
+
+        let data: any = {};
+        try {
+          const existing = await fs.readFile(memoryFile, "utf-8");
+          data = JSON.parse(existing);
+        } catch {
+          //just use empty object idc
+        }
+
+        data.disabled = true;
+        await fs.writeFile(memoryFile, JSON.stringify(data, null, 2), "utf-8");
+
+        message.reply("🔕 This channel is now disabled for responses.");
+      } catch (err) {
+        console.error("Failed to disable channel:", err);
+        message.reply("❌ Failed to disable this channel.");
+      }
+      return;
+    }
+
+    case "enablechannel": {
+      const { guild, channel } = message;
+      if (!guild) {
+        message.reply("❌ This command can only be used in a server.");
+        return;
+      }
+
+      const serverId = guild.id;
+      const channelId = channel.id;
+      const memoryFile = path.join(
+        __dirname,
+        "..",
+        "memory",
+        "servers",
+        serverId,
+        channelId,
+        "memory.json"
+      );
+
+      try {
+        let data: any = {};
+        try {
+          const existing = await fs.readFile(memoryFile, "utf-8");
+          data = JSON.parse(existing);
+        } catch {
+          //just use empty object idc
+        }
+
+        data.disabled = false;
+        await fs.writeFile(memoryFile, JSON.stringify(data, null, 2), "utf-8");
+
+        message.reply("✅ This channel is now enabled for responses.");
+      } catch (err) {
+        console.error("Failed to enable channel:", err);
+        message.reply("❌ Failed to enable this channel.");
+      }
+      return;
+    }
+  }
 }

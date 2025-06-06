@@ -15,25 +15,30 @@ export async function memorize(message: Message) {
   const userId = author.id;
   const isDev = config.admins.includes(userId);
 
-  const dir = path.join(__dirname, "..", "memory", "servers", serverId, channelId);
+  const dir = path.join(
+    __dirname,
+    "..",
+    "memory",
+    "servers",
+    serverId,
+    channelId
+  );
   const filePath = path.join(dir, `memory.json`);
 
   try {
     await fs.mkdir(dir, { recursive: true });
 
-    let memoryData = {
-      server: {
-        id: serverId,
-        name: serverName,
-      },
-      channelId,
-      messages: [] as any[],
-    };
+    let memoryData: any = {};
 
     try {
       const existing = await fs.readFile(filePath, "utf-8");
       memoryData = JSON.parse(existing);
     } catch {}
+
+    if (!memoryData.disabled && !(memoryData.disabled == true)) {
+      console.log("Channel is not disabled or enabled");
+      memoryData.disabled = false;
+    }
 
     memoryData.messages.push({
       timestamp: new Date().toISOString(),
@@ -43,6 +48,7 @@ export async function memorize(message: Message) {
       isDev,
       isBanned: false,
     });
+
     if (memoryData.messages.length > 10000) memoryData.messages.shift();
 
     await fs.writeFile(filePath, JSON.stringify(memoryData, null, 2), "utf-8");
@@ -152,5 +158,4 @@ export async function deleteMemory(level: string, message: Message) {
       err instanceof Error ? err.message : "unknown error"
     }`;
   }
-
 }
