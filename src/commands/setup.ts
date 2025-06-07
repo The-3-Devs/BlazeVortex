@@ -76,6 +76,7 @@ const command: Command = {
             __dirname,
             "..",
             "memory",
+            "servers",
             serverId,
             channel.id
           );
