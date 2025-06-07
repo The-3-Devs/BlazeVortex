@@ -2,9 +2,9 @@ import { Command } from "../types";
 
 const command: Command = {
   name: "me",
-  description: "Replies with My About Me!",
+  description: "Replies with information about me",
   execute: async (interaction) => {
-    const msg: string = "I am a helpful bot here to assist you, I love helping people with code and more, but don't ask my ai something, he's rude asf."
+    const msg: string = "Hey, I'm BlazeVortex, a Discord bot designed to spice up your server! 🚀 To learn more about me, use /help."
     await interaction.reply(msg);
   },
 };

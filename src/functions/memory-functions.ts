@@ -39,7 +39,7 @@ export async function memorize(message: Message) {
       memoryData.disabled = false;
     }
 
-    memoryData.messages.push({
+    memoryData.messages?.push({
       timestamp: new Date().toISOString(),
       user: username,
       message: content,
@@ -52,7 +52,7 @@ export async function memorize(message: Message) {
 
     await fs.writeFile(filePath, JSON.stringify(memoryData, null, 2), "utf-8");
   } catch (err) {
-    console.error("Memory write failed:", err);
+    console.error(`Memory write failed at ${filePath}:`, err);
   }
 }
 
