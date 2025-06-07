@@ -150,7 +150,6 @@ client.on("messageCreate", async (message: Message) => {
       )
       .then((data) => JSON.parse(data)?.disabled)
       .catch(() => false);
-
     if (isDisabled) return;
   }
 

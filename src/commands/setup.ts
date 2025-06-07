@@ -12,7 +12,8 @@ import fs from "fs/promises";
 
 const command: Command = {
   name: "setup",
-  description: "Configure whether all channels should be enabled or disabled for responses.",
+  description:
+    "Configure whether all channels should be enabled or disabled for responses.",
   execute: async (interaction) => {
     if (
       !interaction.guild ||
@@ -47,43 +48,84 @@ const command: Command = {
     await interaction.reply({ embeds: [embed], components: [row] });
 
     const collector = interaction.channel?.createMessageComponentCollector({
-      filter: (i: { user: { id: any; }; }) => i.user.id === interaction.user.id,
+      filter: (i: { user: { id: any } }) => i.user.id === interaction.user.id,
       time: 60_000,
     });
 
-    collector?.on("collect", async (i: { guild: any; customId: string; update: (arg0: { content: string; embeds: never[]; components: never[]; }) => any; }) => {
-      const serverId = i.guild!.id;
-      const channels = i.guild!.channels.cache.filter(
-        (c: { isTextBased: () => any; type: number; }) => c.isTextBased() && c.type !== 4
-      ) as Map<string, GuildTextBasedChannel>;
+    collector?.on(
+      "collect",
+      async (i: {
+        guild: any;
+        customId: string;
+        update: (arg0: {
+          content: string;
+          embeds: never[];
+          components: never[];
+        }) => any;
+      }) => {
+        const serverId = i.guild!.id;
+        const channels = i.guild!.channels.cache.filter(
+          (c: { isTextBased: () => any; type: number }) =>
+            c.isTextBased() && c.type !== 4
+        ) as Map<string, GuildTextBasedChannel>;
 
-      let affected = 0;
+        let affected = 0;
 
-      for (const channel of channels.values()) {
-        const dir = path.join(__dirname, "..", "memory", serverId, channel.id);
-        const flagFile = path.join(dir, "disabled.json");
-        await fs.mkdir(dir, { recursive: true });
+        for (const channel of channels.values()) {
+          const dir = path.join(
+            __dirname,
+            "..",
+            "memory",
+            serverId,
+            channel.id
+          );
+          const memFile = path.join(dir, "memory.json");
+          await fs.mkdir(dir, { recursive: true });
 
-        if (i.customId === "setup-disable-all") {
-          await fs.writeFile(flagFile, JSON.stringify({ disabled: true }), "utf-8");
-          affected++;
-        } else if (i.customId === "setup-enable-all") {
+          let data: Record<string, any> = {};
           try {
-            await fs.unlink(flagFile);
-            affected++;
-          } catch {} // Ignore if doesn't exist
-        }
-      }
+            const existing = await fs.readFile(memFile, "utf-8");
+            data = JSON.parse(existing);
+          } catch {}
 
-      await i.update({
-        content:
-          i.customId === "setup-disable-all"
-            ? `🔕 Disabled bot responses in ${affected} channels.`
-            : `🔔 Enabled bot responses in ${affected} channels.`,
-        embeds: [],
-        components: [],
-      });
-    });
+          if (i.customId === "setup-disable-all") {
+            try {
+              data.disabled = true;
+
+              await fs.writeFile(
+                memFile,
+                JSON.stringify(data, null, 2),
+                "utf-8"
+              );
+            } catch (err) {
+              console.error("Failed to update memory.json:", err);
+            }
+
+            affected++;
+          } else if (i.customId === "setup-enable-all") {
+            try {
+              data.disabled = false;
+
+              await fs.writeFile(
+                memFile,
+                JSON.stringify(data, null, 2),
+                "utf-8"
+              );
+              affected++;
+            } catch {}
+          }
+        }
+
+        await i.update({
+          content:
+            i.customId === "setup-disable-all"
+              ? `🔕 Disabled bot responses in ${affected} channels.`
+              : `🔔 Enabled bot responses in ${affected} channels.`,
+          embeds: [],
+          components: [],
+        });
+      }
+    );
   },
 };
 
