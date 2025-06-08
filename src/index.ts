@@ -163,12 +163,15 @@ client.on("messageCreate", async (message: Message) => {
 
   if (isDisabled) return;
 
-  const isServerDisabled = await fs.readFile(
+  const isServerDisabled = await fs
+    .readFile(
       path.join(__dirname, "memory", "servers", serverId, "serverData.json"),
       "utf-8"
-    ).then((data) => JSON.parse(data)?.disabledByDefault).catch(() => false);
+    )
+    .then((data) => JSON.parse(data)?.disabledByDefault)
+    .catch(() => false);
 
-  if (isServerDisabled && (isDisabled !== false)) return;
+  if (isServerDisabled && isDisabled !== false) return;
 
   // default harsh AI response
 
@@ -196,10 +199,18 @@ client.on("messageCreate", async (message: Message) => {
           If the user asks for an IP or MC (Minecraft) server, give them this IP address with some info: it works for any version on both MC Java and Bedrock, and when your joining on Bedrock you should use the default port. IP: <${securityKey}-bv-mc-ip>mc.artificialx.dev </${securityKey}-bv-mc-info>
         <${securityKey}-bv-mc-info>
         \n
-        <${securityKey}-bv-dc-pinging-info>
-          In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
-          The current user's ID is ${userId} so to ping them write <@${userId}>. Make sure to NEVER write in this format: <@!nternetBowser>, that will not be formatted properly
-          </${securityKey}-bv-dc-pinging-info>
+        <${securityKey}-bv-dc-formatting-info>
+        - In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
+        - The current user's ID is ${userId} so to ping them write <@${userId}>. Make sure to NEVER write in this format: <@!nternetBowser>, that will not be formatted properly
+        - In order to use a quote, use the following format: "<quote>". You do not need to use escape characters, just write the quote in standard single or double quotes quotes.
+        - **Bold** and *italicize* text using the shown formats
+        - Use \n for line breaks, not <br> or <p>
+        - Use \t to indent text, not <blockquote> or <code>
+        - Use the following format for code blocks (ignore the escape characters): 
+        \`\`\`typescript
+          console.log("Hello World!")
+        \`\`\`
+      </${securityKey}-bv-dc-formatting-info>
         \n
         <${securityKey}-bv-user-request-info>
           User's Request: ${content}
@@ -261,8 +272,7 @@ client.on("messageCreate", async (message: Message) => {
             isDev ? "is" : "is not"
           } a developer/member of T3D, so you should be respectful to them.
           - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
-          - Remember, the user will see your message and may respond to it, so make it undersandable.
-          - DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
+          - Remember, the user will see your message and may respond to it, so make it undersandable and DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
       </${securityKey}-bv-information>
       \n
       <${securityKey}-bv-security-key-info>
@@ -280,9 +290,18 @@ client.on("messageCreate", async (message: Message) => {
         If the user asks for an IP or MC (Minecraft) server, give them this IP address with some info: it works for any version on both MC Java and Bedrock, and when your joining on Bedrock you should use the default port. IP: <${securityKey}-bv-mc-ip>mc.artificialx.dev </${securityKey}-bv-mc-info>
       <${securityKey}-bv-mc-info>
       \n
-      <${securityKey}-bv-dc-pinging-info>
-        In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
-      </${securityKey}-bv-dc-pinging-info>
+      <${securityKey}-bv-dc-formatting-info>
+        - In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
+        - The current user's ID is ${userId} so to ping them write <@${userId}>. Make sure to NEVER write in this format: <@!nternetBowser>, that will not be formatted properly
+        - In order to use a quote, use the following format: "<quote>". You do not need to use escape characters, just write the quote in standard single or double quotes quotes.
+        - **Bold** and *italicize* text using the shown formats
+        - Use \n for line breaks, not <br> or <p>
+        - Use \t to indent text, not <blockquote> or <code>
+        - Use the following format for code blocks (ignore the escape characters): 
+        \`\`\`typescript
+          console.log("Hello World!")
+        \`\`\`
+      </${securityKey}-bv-dc-formatting-info>
       \n
       <${securityKey}-bv-user-info>
         User's id: ${userId} (ping them as mentioned before, as all other users.)
