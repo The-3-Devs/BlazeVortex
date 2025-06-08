@@ -12,7 +12,7 @@ import {
 import config from "./config.json";
 import { loadCommands } from "./handlers/commandHandler";
 import { Command } from "./types";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import fs from "fs/promises";
 import path from "path";
 import splitMessage from "./functions/splitmessage";
@@ -273,6 +273,7 @@ client.on("messageCreate", async (message: Message) => {
           } a developer/member of T3D, so you should be respectful to them.
           - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
           - Remember, the user will see your message and may respond to it, so make it undersandable and DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
+          - You can choose not to respond to a message if you feel it is inappropriate or not worth responding to. Do this by setting the 'sendResponse' field to 'false' in your response and do not return a response. Otherwise, set it to 'true'. and respond with a message.
       </${securityKey}-bv-information>
       \n
       <${securityKey}-bv-security-key-info>
@@ -342,19 +343,36 @@ client.on("messageCreate", async (message: Message) => {
     res = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            sendResponse: {
+              type: Type.BOOLEAN,
+            },
+            response: {
+              type: Type.STRING,
+            },
+          },
+          required: ["sendResponse"],
+        },
+      },
     });
   } catch (error) {
     console.error("AI request failed:", error);
     res = { text: "**⚠️ AI failed to respond due to model overload. **" };
   }
 
-  // @ts-ignore
-  const chunks = splitMessage(res.text);
+  if (JSON.parse(res.text || "{}").sendResponse === true) {
+    // @ts-ignore
+    const chunks = splitMessage((JSON.parse(res.text).response) || "⚠️ No response");
 
-  if (chunks.length > 0) {
-    await message.reply(chunks[0]);
-    for (let i = 1; i < chunks.length; i++) {
-      await (message.channel as TextBasedChannelFields).send(chunks[i]);
+    if (chunks.length > 0) {
+      await message.reply(chunks[0]);
+      for (let i = 1; i < chunks.length; i++) {
+        await (message.channel as TextBasedChannelFields).send(chunks[i]);
+      }
     }
   }
 });
