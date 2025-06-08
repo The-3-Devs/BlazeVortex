@@ -18,7 +18,10 @@ import path from "path";
 import splitMessage from "./functions/splitmessage";
 import { v4 as uuidv4 } from "uuid";
 import { memorize, recallMemory } from "./functions/memory-functions";
-import { handleAdminCommands, handleServerAdminCommands } from "./functions/admin-command-handlers";
+import {
+  handleAdminCommands,
+  handleServerAdminCommands,
+} from "./functions/admin-command-handlers";
 
 const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
 
@@ -75,6 +78,8 @@ const prefix = "!";
 
 client.on("messageCreate", async (message: Message) => {
   const { guild, channel } = message;
+
+  if (!guild || !channel) return;
 
   await memorize(message);
 
@@ -139,19 +144,31 @@ client.on("messageCreate", async (message: Message) => {
     }
     await handleServerAdminCommands(message, prefix);
   }
+  const serverId = guild.id;
+  const channelId = channel.id;
+  const isDisabled = await fs
+    .readFile(
+      path.join(
+        __dirname,
+        "memory",
+        "servers",
+        serverId,
+        channelId,
+        "memory.json"
+      ),
+      "utf-8"
+    )
+    .then((data) => JSON.parse(data)?.disabled)
+    .catch(() => false);
 
-  if (guild) {
-    const serverId = guild.id;
-    const channelId = channel.id;
-    const isDisabled = await fs
-      .readFile(
-        path.join(__dirname, "memory", "servers", serverId, channelId, "memory.json"),
-        "utf-8"
-      )
-      .then((data) => JSON.parse(data)?.disabled)
-      .catch(() => false);
-    if (isDisabled) return;
-  }
+  if (isDisabled) return;
+
+  const isServerDisabled = await fs.readFile(
+      path.join(__dirname, "memory", "servers", serverId, "serverData.json"),
+      "utf-8"
+    ).then((data) => JSON.parse(data)?.disabledByDefault).catch(() => false);
+
+  if (isServerDisabled && (isDisabled !== false)) return;
 
   // default harsh AI response
 

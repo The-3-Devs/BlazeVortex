@@ -71,6 +71,16 @@ const command: Command = {
 
         let affected = 0;
 
+        const serverMemFileDir = path.join(
+          __dirname,
+          "..",
+          "memory",
+          "servers",
+          serverId
+        );
+
+        const memFile = path.join(serverMemFileDir, "serverData.json");
+
         for (const channel of channels.values()) {
           const dir = path.join(
             __dirname,
@@ -80,6 +90,7 @@ const command: Command = {
             serverId,
             channel.id
           );
+
           const memFile = path.join(dir, "memory.json");
           await fs.mkdir(dir, { recursive: true });
 
@@ -114,6 +125,47 @@ const command: Command = {
               );
               affected++;
             } catch {}
+          }
+        }
+
+        let serverData: Record<string, any> = {};
+        try {
+          const existing = await fs.readFile(memFile, "utf-8");
+          serverData = JSON.parse(existing);
+        } catch {}
+
+        if (i.customId === "setup-disable-all") {
+          try {
+            const existing = await fs.readFile(memFile, "utf-8");
+            serverData = JSON.parse(existing);
+          } catch {}
+
+          if (i.customId === "setup-disable-all") {
+            try {
+              serverData.disabledByDefault = true;
+
+              await fs.writeFile(
+                memFile,
+                JSON.stringify(serverData, null, 2),
+                "utf-8"
+              );
+
+            } catch (err) {
+              console.error("Failed to update serverData.json:", err);
+            }
+          } else if (i.customId === "setup-enable-all") {
+            try {
+              serverData.disabledByDefault = false;
+
+              await fs.writeFile(
+                memFile,
+                JSON.stringify(serverData, null, 2),
+                "utf-8"
+              );
+
+            } catch (err) {
+              console.error("Failed to update serverData.json:", err);
+            }
           }
         }
 
