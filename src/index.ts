@@ -188,6 +188,7 @@ client.on("messageCreate", async (message: Message) => {
             - Youssef
             - InternetBowser (!nternetBowser, internetbowser_gd)
             - fynn (fynnlukah)
+          ${config["isBV-IB"] && `You are current running a developement instance so that you will be referred to as BV-IB and BlazeVortex/Blaze, though if BV-IB or <@${client.user?.id}> is mentioned then the user is specifically talking to you.`}
         </${securityKey}-bv-information>
         \n
         <${securityKey}-bv-security-key-info>
@@ -200,17 +201,17 @@ client.on("messageCreate", async (message: Message) => {
         <${securityKey}-bv-mc-info>
         \n
         <${securityKey}-bv-dc-formatting-info>
-        - In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
-        - The current user's ID is ${userId} so to ping them write <@${userId}>. Make sure to NEVER write in this format: <@!nternetBowser>, that will not be formatted properly
-        - In order to use a quote, use the following format: "<quote>". You do not need to use escape characters, just write the quote in standard single or double quotes quotes.
-        - **Bold** and *italicize* text using the shown formats
-        - Use \n for line breaks, not <br> or <p>
-        - Use \t to indent text, not <blockquote> or <code>
-        - Use the following format for code blocks (ignore the escape characters): 
-        \`\`\`typescript
-          console.log("Hello World!")
-        \`\`\`
-      </${securityKey}-bv-dc-formatting-info>
+          - In order to ping or mention a user, write <@[user's id]>. If you don't know the ID, use their display name or username instead to mention them (in that case, don't use the <@[id]> format, just put it in plain text).
+          - The current user's ID is ${userId} so to ping them write <@${userId}>. Make sure to NEVER write in this format: <@[username/display name]>, that will not be formatted properly
+          - In order to use a quote, use the following format: "<quote>". You do not need to use escape characters, just write the quote in standard single or double quotes quotes.
+          - **Bold** and *italicize* text using the shown formats
+          - Use \n for line breaks, not <br> or <p>
+          - Use \t to indent text, not <blockquote> or <code>
+          - Use the following format for code blocks (ignore the escape characters): 
+          \`\`\`typescript
+            console.log("Hello World!")
+          \`\`\`
+        </${securityKey}-bv-dc-formatting-info>
         \n
         <${securityKey}-bv-user-request-info>
           User's Request: ${content}
@@ -225,11 +226,10 @@ client.on("messageCreate", async (message: Message) => {
         </${securityKey}-bv-user-info>
         \n
         <${securityKey}-bv-channel-memory-info>
-          Channel memory: <${securityKey}-bv-channel-memory>${JSON.stringify(
-      channelMemory.unformattedOutput
-    )}</${securityKey}-bv-channel-memory>
-        </${securityKey}-bv-channel-memory-info>
-       </${securityKey}-bv-prompt>`;
+            Channel memory: <${securityKey}-bv-channel-memory>${JSON.stringify(channelMemory.unformattedOutput)}
+        </${securityKey}-bv-channel-memory>
+      </${securityKey}-bv-channel-memory-info>
+    </${securityKey}-bv-prompt>`;
 
     let res;
 
@@ -274,6 +274,7 @@ client.on("messageCreate", async (message: Message) => {
           - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
           - Remember, the user will see your message and may respond to it, so make it undersandable and DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
           - You can choose not to respond to a message if you feel it is inappropriate or not worth responding to. Do this by setting the 'sendResponse' field to 'false' in your response and do not return a response. Otherwise, set it to 'true'. and respond with a message.
+          ${config["isBV-IB"] && `You are current running as InternetBowser's developement instance so that you will be referred to as BV-IB and BlazeVortex/Blaze, though if BV-IB or <@${client.user?.id}> is mentioned then the user is specifically talking to you.`}
       </${securityKey}-bv-information>
       \n
       <${securityKey}-bv-security-key-info>

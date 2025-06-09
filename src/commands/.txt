@@ -1,4 +1,4 @@
-// just a backup ignore this shi].
+// just a backup, ignore this file
 import { Command } from "../types";
 import { MessageActionRow, MessageButton } from 'discord.js';
 

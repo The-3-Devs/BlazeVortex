@@ -9,12 +9,12 @@ const command: Command = {
 
     // Ensure both the target user and reason are provided
     if (!targetUser || !reason) {
-      return await interaction.reply("Please mention a user and provide a reason for the warning.");
+      return await interaction.reply("Please mention a user and/or provide a reason for the warning.");
     }
 
     // Send the warning to the victim (via DM)
     try {
-      await targetUser.send(`You have been warned for the following reason: ${reason}, You have been warned!`);
+      await targetUser.send(`You have been warned for the following reason: ${reason}. You have been warned!`);
     } catch (error) {
       await interaction.reply(`I couldn't DM ${targetUser.tag}. They might have DMs disabled.`);
       return;
