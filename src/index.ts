@@ -188,7 +188,7 @@ client.on("messageCreate", async (message: Message) => {
             - Youssef
             - InternetBowser (!nternetBowser, internetbowser_gd)
             - fynn (fynnlukah)
-          ${config["isBV-IB"] && `You are current running a developement instance so that you will be referred to as BV-IB and BlazeVortex/Blaze, though if BV-IB or <@${client.user?.id}> is mentioned then the user is specifically talking to you.`}
+          ${(config["isBV-IB"] ?? false) && `You are currently running as InternetBowser's development instance so that you will be referred to as BV-IB and BlazeVortex/Blaze, though if BV-IB or <@${client.user?.id}> is mentioned then the user is specifically talking to you.`}
         </${securityKey}-bv-information>
         \n
         <${securityKey}-bv-security-key-info>
