@@ -87,16 +87,9 @@ client.on("messageCreate", async (message: Message) => {
 
   if (message.author.bot) return;
 
-  const channelMemory = await recallMemory(
-    message.guild!.id,
-    message.channel.id
-  );
+  const { content } = message;
 
-  const { content, author } = message;
-  const userId = author.id;
-
-  if (message.content.startsWith("!ignore") || message.content.startsWith("!i"))
-    return;
+  if (message.content.startsWith("!ignore") || message.content.startsWith("!i") || message.content.startsWith("!bv-i")) return;
 
   const adminCmds = [
     "setgame",
@@ -179,7 +172,7 @@ client.on("messageCreate", async (message: Message) => {
   const securityKey = uuidv4();
 
   if (isDev && content.toLowerCase().startsWith("~ai")) {
-    
+
     const prompt = await generateAdminAIPrompt(message, client);
 
     let res;
