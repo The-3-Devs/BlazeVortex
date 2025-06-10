@@ -11,6 +11,7 @@ import config from "../config.json";
 import chalk from "chalk";
 import { deleteMemory, recallMemory } from "./memory-functions";
 import splitMessage from "./splitmessage";
+import { getMemoryFilePath } from "./base-memory-functions";
 
 export const handleAdminCommands = async (
   message: Message,
@@ -69,9 +70,7 @@ export const handleAdminCommands = async (
       const serverId = guild.id;
       const channelId = channel.id;
       const dir = path.join(
-        __dirname,
-        "..",
-        "memory",
+        getMemoryFilePath(),
         "servers",
         serverId,
         channelId
@@ -110,9 +109,7 @@ export const handleAdminCommands = async (
       const serverId = guild.id;
       const channelId = channel.id;
       const memoryFile = path.join(
-        __dirname,
-        "..",
-        "memory",
+        getMemoryFilePath(),
         "servers",
         serverId,
         channelId,
@@ -258,9 +255,7 @@ export async function handleServerAdminCommands(
       const serverId = guild.id;
       const channelId = channel.id;
       const dir = path.join(
-        __dirname,
-        "..",
-        "memory",
+        getMemoryFilePath(),
         "servers",
         serverId,
         channelId
@@ -299,9 +294,7 @@ export async function handleServerAdminCommands(
       const serverId = guild.id;
       const channelId = channel.id;
       const memoryFile = path.join(
-        __dirname,
-        "..",
-        "memory",
+        getMemoryFilePath(),
         "servers",
         serverId,
         channelId,

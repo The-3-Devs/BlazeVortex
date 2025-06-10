@@ -9,6 +9,7 @@ import {
 } from "discord.js";
 import path from "path";
 import fs from "fs/promises";
+import { getMemoryFilePath } from "../functions/base-memory-functions";
 
 const command: Command = {
   name: "setup",
@@ -72,9 +73,7 @@ const command: Command = {
         let affected = 0;
 
         const serverMemFileDir = path.join(
-          __dirname,
-          "..",
-          "memory",
+          getMemoryFilePath(),
           "servers",
           serverId
         );
@@ -83,9 +82,7 @@ const command: Command = {
 
         for (const channel of channels.values()) {
           const dir = path.join(
-            __dirname,
-            "..",
-            "memory",
+            getMemoryFilePath(),
             "servers",
             serverId,
             channel.id

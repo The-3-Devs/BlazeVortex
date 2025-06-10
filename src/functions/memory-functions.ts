@@ -2,6 +2,7 @@ import { Message } from "discord.js";
 import fs from "fs/promises";
 import path from "path";
 import config from "../config.json";
+import { getMemoryFilePath } from "./base-memory-functions";
 
 export async function memorize(message: Message) {
   const { guild, channel, author, content } = message;
@@ -16,9 +17,7 @@ export async function memorize(message: Message) {
   const isDev = config.admins.includes(userId);
 
   const dir = path.join(
-    __dirname,
-    "..",
-    "memory",
+    getMemoryFilePath(),
     "servers",
     serverId,
     channelId
@@ -61,9 +60,7 @@ export async function recallMemory(
   channelId: string
 ): Promise<any> {
   const filePath = path.join(
-    __dirname,
-    "..",
-    "memory",
+    getMemoryFilePath(),
     "servers",
     guildId,
     channelId,
@@ -110,7 +107,7 @@ export async function deleteMemory(level: string, message: Message) {
   const serverId = guild.id;
   const channelId = channel.id;
 
-  const baseDir = path.join(__dirname, "..", "memory", "servers");
+  const baseDir = path.join(getMemoryFilePath(), "servers");
   const serverDir = path.join(baseDir, serverId);
   const channelDir = path.join(serverDir, channelId);
   const memoryFile = path.join(channelDir, "memory.json");

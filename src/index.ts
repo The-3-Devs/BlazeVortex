@@ -22,6 +22,7 @@ import {
   handleAdminCommands,
   handleServerAdminCommands,
 } from "./functions/admin-command-handlers";
+import { getMemoryFilePath } from "./functions/base-memory-functions";
 
 const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
 
@@ -149,8 +150,7 @@ client.on("messageCreate", async (message: Message) => {
   const isDisabled = await fs
     .readFile(
       path.join(
-        __dirname,
-        "memory",
+        getMemoryFilePath(),
         "servers",
         serverId,
         channelId,
@@ -165,7 +165,7 @@ client.on("messageCreate", async (message: Message) => {
 
   const isServerDisabled = await fs
     .readFile(
-      path.join(__dirname, "memory", "servers", serverId, "serverData.json"),
+      path.join(getMemoryFilePath(), "servers", serverId, "serverData.json"),
       "utf-8"
     )
     .then((data) => JSON.parse(data)?.disabledByDefault)
@@ -274,7 +274,7 @@ client.on("messageCreate", async (message: Message) => {
           - Be *extremely respectful* when interacting with T3D or admins. You can feel free to disclose non-private or general information about them, but do not disclose any private information about them.
           - Remember, the user will see your message and may respond to it, so make it undersandable and DO NOT REPEAT YOURSELF in any form unkess explicitly asked to.
           - You can choose not to respond to a message if you feel it is inappropriate or not worth responding to. Do this by setting the 'sendResponse' field to 'false' in your response and do not return a response. Otherwise, set it to 'true'. and respond with a message.
-          ${((config as any)["isBV-IB"] ?? false) && `You are currently running as InternetBowser's development instance so that you will be referred to as BV-IB and BlazeVortex/Blaze, though if BV-IB or <@${client.user?.id}> is mentioned then the user is specifically talking to you.`}
+          ${(config as any["isBV-IB"] ?? false) && `You are currently running as InternetBowser's development instance so that you will be referred to as BV-IB and BlazeVortex/Blaze, though if BV-IB or <@${client.user?.id}> is mentioned then the user is specifically talking to you.`}
       </${securityKey}-bv-information>
       \n
       <${securityKey}-bv-security-key-info>
