@@ -1,6 +1,6 @@
 import { Command } from "../types";
 import config from "../config.json";
-import { getMemoryFilePath } from "../functions/base-memory-functions";
+import { getMemoryFilePath } from "../lib/base-memory-functions";
 
 const command: Command = {
   name: "ban",

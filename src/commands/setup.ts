@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import path from "path";
 import fs from "fs/promises";
-import { getMemoryFilePath } from "../functions/base-memory-functions";
+import { getMemoryFilePath } from "../lib/base-memory-functions";
 
 const command: Command = {
   name: "setup",

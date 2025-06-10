@@ -1,5 +1,5 @@
 import { Command } from "../types";
-import  fetchUrl  from "../functions/fetch"
+import  fetchUrl  from "../lib/fetch"
 const command: Command = {
   name: "random_joke",
   description: "Replies with A Joke!",
