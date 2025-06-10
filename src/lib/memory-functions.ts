@@ -16,22 +16,24 @@ export async function memorize(message: Message) {
   const userId = author.id;
   const isDev = config.admins.includes(userId);
 
-  const dir = path.join(
-    getMemoryFilePath(),
-    "servers",
-    serverId,
-    channelId
-  );
+  const dir = path.join(getMemoryFilePath(), "servers", serverId, channelId);
   const filePath = path.join(dir, `memory.json`);
 
   try {
     await fs.mkdir(dir, { recursive: true });
 
-    let memoryData: any = { messages: [], server: { id: serverId, name: serverName } };
+    let memoryData: any = {
+      messages: [],
+      server: { id: serverId, name: serverName },
+    };
 
     try {
       const existing = await fs.readFile(filePath, "utf-8");
       memoryData = JSON.parse(existing);
+
+      if (!Array.isArray(memoryData.messages)) {
+        memoryData.messages = [];
+      }
     } catch {}
 
     if (!memoryData.disabled && !(memoryData.disabled == true)) {
