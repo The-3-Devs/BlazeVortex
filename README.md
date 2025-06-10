@@ -1,4 +1,6 @@
-# BlazeVortex bot, in testing.
+# BlazeVortex
+
+## *BlazeVortex is a Discord bot that adds extra humor to any conversation by leveraging AI to generate funny, contextually accurate messages.*
 
 ## **IMPORTANT: Read [CONTRIBUTING.md](/CONTRIBUTING.md) before working/commiting any changes**
 
