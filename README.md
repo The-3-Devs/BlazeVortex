@@ -10,9 +10,9 @@
 
 Make sure you have **Node.js v22** installed. You can check by running:
 
-\`\`\`bash
+```bash
 node -v
-\`\`\`
+```
 
 > If not installed, download it from [https://nodejs.org/](https://nodejs.org/)
 
@@ -22,21 +22,21 @@ node -v
 
 Run the following command in your terminal to install required packages:
 
-\`\`\`bash
+```bash
 npm run setup
-\`\`\`
+```
 
 ---
 
-### 3. ⚙️ Create Your \`config.json\` File
+### 3. ⚙️ Create Your `config.json` File
 
-Create a file named \`config.json\` inside the \`./src\` directory.
+Create a file named `config.json` inside the `./src` directory.
 
 ---
 
-### 4. ✍️ Fill in \`config.json\` with This Template:
+### 4. ✍️ Fill in `config.json` with This Template:
 
-\`\`\`json
+```json
 {
   "token": "[Your Discord Bot Token]",
   "admins": [
@@ -53,7 +53,7 @@ Create a file named \`config.json\` inside the \`./src\` directory.
   "guildId": "1250896904854962189", # Literally has no use
   "isBV-IB": true
 }
-\`\`\`
+```
 
 ---
 
@@ -65,7 +65,7 @@ Create a file named \`config.json\` inside the \`./src\` directory.
 1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
 2. Click **New Application** or open your existing one.
 3. Navigate to **Bot** → click **"Add Bot"** if you haven’t.
-4. Under the **Token** section, click **"Reset Token"** → **Copy it** and paste into \`"token"\`.
+4. Under the **Token** section, click **"Reset Token"** → **Copy it** and paste into `"token"`.
 
 #### 👤 Get Your Discord User ID:
 1. Open Discord → go to **User Settings** → **Advanced** → enable **Developer Mode**.
@@ -73,7 +73,7 @@ Create a file named \`config.json\` inside the \`./src\` directory.
 
 #### 🤖 Get Your Bot’s Client ID:
 1. In the Developer Portal, open your application.
-2. On the **General Information** page, copy the **Application ID** → paste into \`"clientId"\`.
+2. On the **General Information** page, copy the **Application ID** → paste into `"clientId"`.
 
 ---
 
@@ -81,6 +81,6 @@ Create a file named \`config.json\` inside the \`./src\` directory.
 
 1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey).
 2. Click **"Create API Key"**.
-3. Copy the key and paste it into \`"geminiApiKey"\`.
+3. Copy the key and paste it into `"geminiApiKey"`.
 
 > This key gives access to Google's Gemini model for AI capabilities.
