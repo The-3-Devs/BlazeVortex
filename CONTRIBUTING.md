@@ -28,7 +28,7 @@ Make sure you have the GitHub CLI installed and that you account has 2FA
     ```
 
 3. **Make Changes**  
-    Implement your changes and ensure your code follows our previous design patterns
+    Implement your changes and ensure your code follows our previous design patterns (Read README.MD to set up)
 
 4. **Add and Commit Your Changes**  
     Make sure to write a descriptive commit message:
