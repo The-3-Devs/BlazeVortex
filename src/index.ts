@@ -8,6 +8,7 @@ import {
   ActivityType,
   TextBasedChannelFields,
   PresenceUpdateStatus,
+  MessageFlags
 } from "discord.js";
 import config from "./config.json";
 import { loadCommands } from "./handlers/commandHandler";
@@ -82,6 +83,8 @@ client.on("messageCreate", async (message: Message) => {
   const { guild, channel } = message;
 
   if (!guild || !channel) return;
+
+  if (message.flags?.has(MessageFlags.Ephemeral)) return
 
   await memorize(message);
 
@@ -168,8 +171,6 @@ client.on("messageCreate", async (message: Message) => {
   if (isServerDisabled && isDisabled !== false) return;
 
   // default harsh AI response
-
-  const securityKey = uuidv4();
 
   if (isDev && content.toLowerCase().startsWith("~ai")) {
 

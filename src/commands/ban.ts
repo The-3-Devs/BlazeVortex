@@ -1,6 +1,7 @@
 import { Command } from "../types";
 import config from "../config.json";
-import { getMemoryFilePath } from "../lib/base-memory-functions";
+import { getMemoryFilePath, retrieveJSONData, setJSONData } from "../lib/base-memory-functions";
+import path from "path"
 
 const command: Command = {
   name: "ban",
@@ -23,6 +24,9 @@ const command: Command = {
           );
         } else {
           await interaction.reply(`Banning <@${userToBan.id}>...`);
+          let userData = await retrieveJSONData(path.join(getMemoryFilePath(), "users", userToBan.id), "userData.json")
+          userData.banned = true
+          setJSONData(path.join(getMemoryFilePath(), "users", userToBan.id), "userData.json", userData)
         }
       } else {
         return await interaction.reply(

@@ -47,6 +47,7 @@ export async function memorize(message: Message) {
       userId,
       isDev,
       isBanned: false,
+      flags: message.flags
     });
 
     if (memoryData.messages.length > 10000) memoryData.messages.shift();
