@@ -5,7 +5,7 @@ Thank you for considering contributing to BlazeVortex! Make sure to follow the g
 *Not doing so may result in your changes being automatically reverted*
 
 ## Note
-Make sure you have the GitHub CLI installed and that you account has 2FA
+Make sure you have the GitHub CLI installed and that your account has 2FA
 
 ## How to Contribute
 

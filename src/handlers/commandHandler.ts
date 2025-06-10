@@ -39,7 +39,7 @@ export const loadCommands = async (client: Client) => {
     console.log("🌐 Deploying commands to Discord...");
 
     await rest.put(
-      Routes.applicationCommands(config.clientId), // ⚡ clientId from config.json
+      Routes.applicationCommands(config.clientId), // ⚡ clientId from config.json idc.
       { body: slashCommands }
     );
 

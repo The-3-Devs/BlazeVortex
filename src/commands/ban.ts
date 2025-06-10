@@ -26,7 +26,7 @@ const command: Command = {
         }
       } else {
         return await interaction.reply(
-          "You do not have permission to use this command. Only admins can ban users."
+          "You do not have permission to use this command. Only T3D admins can ban users."
         );
       }
     } catch (error) {
