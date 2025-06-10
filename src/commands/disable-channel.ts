@@ -5,12 +5,12 @@ import path from "path";
 import config from "../config.json"
 
 const command: Command = {
-  name: "enable-channel",
-  description: "Enables a channel for automated resopnses",
+  name: "disable-channel",
+  description: "Disables a channel for automated resopnses",
   execute: async (interaction) => {
-    if ((!interaction.member?.permissions.has("Administrator")) || (config.admins.includes(interaction.user.id))) return await interaction.reply("You must be a server administrator to use this command")
-
     const { guild, channel } = interaction;
+
+    if ((!interaction.member?.permissions.has("Administrator")) || (config.admins.includes(interaction.user.id))) return await interaction.reply("You must be a server administrator to use this command")
 
     if (!guild) {
       interaction.reply("❌ This command can only be used in a server.");
@@ -36,13 +36,13 @@ const command: Command = {
         //just use empty object idc
       }
 
-      data.disabled = false;
+      data.disabled = true;
       await fs.writeFile(memoryFile, JSON.stringify(data, null, 2), "utf-8");
 
-      interaction.reply("✅ This channel is now enabled for responses.");
+      interaction.reply("✅ This channel is now disabled for responses.");
     } catch (err) {
-      console.error("Failed to enable channel:", err);
-      interaction.reply("❌ Failed to enable this channel.");
+      console.error("Failed to disable channel:", err);
+      interaction.reply("❌ Failed to disable this channel.");
     }
     return;
   },
