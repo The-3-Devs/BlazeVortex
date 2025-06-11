@@ -25,8 +25,13 @@ const command: Command = {
         } else {
           await interaction.reply(`Banning <@${userToBan.id}>...`);
           let userData = await retrieveJSONData(path.join(getMemoryFilePath(), "users", userToBan.id), "userData.json")
-          userData.banned = true
-          setJSONData(path.join(getMemoryFilePath(), "users", userToBan.id), "userData.json", userData)
+          if (userData.banned) {
+            return await interaction.reply("User is already banned")
+          } else {
+            userData.banned = true
+            setJSONData(path.join(getMemoryFilePath(), "users", userToBan.id), "userData.json", userData)
+            return await interaction.reply("Succesfully banned user")
+          }
         }
       } else {
         return await interaction.reply(
