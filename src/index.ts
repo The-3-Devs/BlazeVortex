@@ -17,8 +17,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import fs from "fs/promises";
 import path from "path";
 import splitMessage from "./lib/splitmessage";
-import { v4 as uuidv4 } from "uuid";
-import { memorize, recallMemory } from "./lib/memory-functions";
+import { memorize, getUserData } from "./lib/memory-functions";
 import {
   handleAdminCommands,
   handleServerAdminCommands,
@@ -87,6 +86,10 @@ client.on("messageCreate", async (message: Message) => {
   if (message.flags?.has(MessageFlags.Ephemeral)) return
 
   await memorize(message);
+
+  const userData = await getUserData(message.author.id)
+
+  if (userData.banned) return
 
   if (message.author.bot) return;
 

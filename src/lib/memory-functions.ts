@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import fs from "fs/promises";
 import path from "path";
 import config from "../config.json";
-import { getMemoryFilePath } from "./base-memory-functions";
+import { getMemoryFilePath, retrieveJSONData } from "./base-memory-functions";
 
 export async function memorize(message: Message) {
   const { guild, channel, author, content } = message;
@@ -46,7 +46,7 @@ export async function memorize(message: Message) {
       message: content,
       userId,
       isDev,
-      isBanned: false,
+      isBanned: (await retrieveJSONData(path.join(getMemoryFilePath(), "users", userId), "userData.json")).banned ?? false,
       flags: message.flags
     });
 
@@ -157,4 +157,8 @@ export async function deleteMemory(level: string, message: Message) {
       err instanceof Error ? err.message : "unknown error"
     }`;
   }
+}
+
+export async function getUserData(userId: string) {
+  return await retrieveJSONData(path.join(getMemoryFilePath(), "users", userId), "userData.json")
 }

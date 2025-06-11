@@ -88,6 +88,7 @@ export async function generateMainAIPrompt(
     channelMemory.unformattedOutput
   )}</${securityKey}-bv-channel-memory>
         Use this to understand the context of the conversation and provide relevant responses. If the channel memory is empty, you can assume this is the first message in the channel that you have winessed.
+        If a message says that a user is banned it is referring to the user's status at the time that the message was sent
       </${securityKey}-bv-channel-memory-info>
       \n
       <${securityKey}-bv-channel-memory-explanation>

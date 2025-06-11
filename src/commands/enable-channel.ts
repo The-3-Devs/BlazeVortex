@@ -3,12 +3,18 @@ import fs from "fs/promises";
 import { getMemoryFilePath } from "../lib/base-memory-functions";
 import path from "path";
 import config from "../config.json"
+import { PermissionsBitField } from "discord.js"
 
 const command: Command = {
   name: "enable-channel",
   description: "Enables a channel for automated resopnses",
   execute: async (interaction) => {
-    if ((!interaction.member?.permissions.has("Administrator")) || (config.admins.includes(interaction.user.id))) return await interaction.reply("You must be a server administrator to use this command")
+    if (
+      !interaction.member?.permissions.has(
+        PermissionsBitField.Flags.Administrator
+      ) &&
+      !config.admins.includes(interaction.user.id)
+    ) return await interaction.reply("You must be a server administrator to use this command")
 
     const { guild, channel } = interaction;
 

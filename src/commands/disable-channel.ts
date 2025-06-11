@@ -2,7 +2,8 @@ import { Command } from "../types";
 import fs from "fs/promises";
 import { getMemoryFilePath } from "../lib/base-memory-functions";
 import path from "path";
-import config from "../config.json"
+import config from "../config.json";
+import { PermissionsBitField } from "discord.js";
 
 const command: Command = {
   name: "disable-channel",
@@ -10,7 +11,15 @@ const command: Command = {
   execute: async (interaction) => {
     const { guild, channel } = interaction;
 
-    if ((!interaction.member?.permissions.has("Administrator")) || (config.admins.includes(interaction.user.id))) return await interaction.reply("You must be a server administrator to use this command")
+    if (
+      !interaction.member?.permissions.has(
+        PermissionsBitField.Flags.Administrator
+      ) &&
+      !config.admins.includes(interaction.user.id)
+    )
+      return await interaction.reply(
+        "You must be a server administrator to use this command"
+      );
 
     if (!guild) {
       interaction.reply("❌ This command can only be used in a server.");
