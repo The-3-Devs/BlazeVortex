@@ -91,6 +91,8 @@ client.on("messageCreate", async (message: Message) => {
   const userData = await getUserData(author.id);
   if (userData.banned) return;
 
+  if (content.startsWith("!i") || content.startsWith("!i")) return
+
   const adminCmds = [
     "setgame", "setstatus", "eval", "guilds", "blvrestart", "addadmin", 
     "defaultstatus", "removeadmin", "debug", "uptime", "fuckryan", 
