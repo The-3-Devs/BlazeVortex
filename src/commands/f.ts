@@ -64,7 +64,7 @@ const command: Command = {
             : "Unknown";
         addUserToSite(interaction.user, selected);
         await selectInteraction.update({
-          content: `You selected: ${selected}`,
+          content: `"${selected}" added to the site`,
           components: [],
         });
       }
