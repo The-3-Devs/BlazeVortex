@@ -71,7 +71,7 @@ const command: Command = {
           addUserToSite(interaction.user, selected);
 
           await selectInteraction.update({
-            content: `Adding "${selected}" to the site`,
+            content: `✅ "${selected}" added to the site.`,
             components: [],
           });
         }
