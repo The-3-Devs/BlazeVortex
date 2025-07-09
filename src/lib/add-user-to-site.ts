@@ -2,15 +2,15 @@ import { User } from "discord.js";
 import config from "../config.json";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const client = new MongoClient(config.mongoUri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
 export async function addUserToSite(user: User, selectedName: string) {
+  const client = new MongoClient(config.mongoUri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    },
+  });
+
   try {
     await client.connect();
     await client
