@@ -28,14 +28,15 @@ jobs:
             cd ./BlazeVortex
             git pull
             npm install
-            timestamp=$(date +"[%I:%M:%S %p %Z]")
-            echo "$timestamp BlazeVortex start initiated at $timestamp 🔥 ✅ 🚀"
-            echo "$timestamp BlazeVortex start initiated at $timestamp 🔥 ✅ 🚀" >> out.log
+            timestamp=$(TZ=America/Chicago date +"[CST %m/%d %I:%M %p]")
+            echo "$timestamp BlazeVortex start initiated 🔥 ✅ 🚀"
+            echo "$timestamp BlazeVortex start initiated 🔥 ✅ 🚀" >> out.log
             nohup bash -c 'npm run start-ubuntu 2>&1 | awk '\''{ \
-              cstcmd="TZ=America/Chicago date +\"[CST: %Y-%m-%d %I:%M:%S %p]\""; \
-              pkt="TZ=Asia/Karachi date +\"[PKT: %Y-%m-%d %I:%M:%S %p]\""; \
+              cstcmd="TZ=America/Chicago date +\"[CST %m/%d %I:%M %p]\""; \
+              pktcmd="TZ=Asia/Karachi date +\"[PKT %I:%M %p]\""; \
               cstcmd | getline cst; close(cstcmd); \
-              pkt | getline p; close(pkt); \
-              print cst, p, $0; fflush(); \
+              pktcmd | getline pkt; close(pktcmd); \
+              print cst, pkt, $0; fflush(); \
             }'\'' >> out.log' </dev/null >/dev/null 2>&1 &
           EOF
+
