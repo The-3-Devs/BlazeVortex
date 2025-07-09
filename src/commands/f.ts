@@ -103,8 +103,8 @@ const command: Command = {
             ephemeral: true,
           });
         }
-      } catch (err) {
-        console.error("Failed to send error response:", err);
+      } finally {
+        console.error("Failed to send error response:", error);
       }
     }
   },
