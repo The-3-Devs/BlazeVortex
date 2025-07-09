@@ -68,10 +68,10 @@ const command: Command = {
               ? interaction.member?.displayName ?? "No display name"
               : "Unknown";
 
-          await addUserToSite(interaction.user, selected);
+          addUserToSite(interaction.user, selected);
 
           await selectInteraction.update({
-            content: `You selected: ${selected}`,
+            content: `Adding "${selected}" to the site`,
             components: [],
           });
         }
