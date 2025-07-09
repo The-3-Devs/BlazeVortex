@@ -28,6 +28,8 @@ export async function addUserToSite(user: User, selectedName: string) {
         },
         { upsert: true }
       );
+  } catch (err) {
+    console.error("Error adding user to site:", err);
   } finally {
     await client.close();
   }
