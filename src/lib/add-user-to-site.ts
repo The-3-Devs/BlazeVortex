@@ -1,6 +1,6 @@
 import { User } from "discord.js";
 import config from "../config.json";
-const { MongoClient, ServerApiVersion } = require("mongodb");
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 const client = new MongoClient(config.mongoUri, {
   serverApi: {
