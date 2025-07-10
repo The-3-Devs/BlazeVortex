@@ -29,8 +29,8 @@ jobs:
             git pull
             npm install
             timestamp=$(TZ=America/Chicago date +"[CST %m/%d %I:%M %p]")
-            echo "$timestamp BlazeVortex start initiated 🔥 ✅ 🚀"
-            echo "$timestamp BlazeVortex start initiated 🔥 ✅ 🚀" >> out.log
+            echo "$timestamp Github BlazeVortex start initiated 🔥 ✅ 🚀"
+            echo "$timestamp Github BlazeVortex start initiated 🔥 ✅ 🚀" >> out.log
             nohup bash -c 'npm run start-ubuntu 2>&1 | awk '\''{ \
               cstcmd="TZ=America/Chicago date +\"[CST %m/%d %I:%M %p]\""; \
               pktcmd="TZ=Asia/Karachi date +\"[PKT %I:%M %p]\""; \
