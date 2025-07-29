@@ -68,10 +68,10 @@ const command: Command = {
               ? interaction.member?.displayName ?? "No display name"
               : "Unknown";
 
-          addUserToSite(interaction.user, selected);
-
+          const returnedVal = await addUserToSite(interaction.user, selected);
+          
           await selectInteraction.update({
-            content: `✅ "${selected}" added to the site.`,
+            content: `✅ "${selected}" added to the site. ${returnedVal == "recentlyUsed" ? "You ran this command within the past five minutes, so the counter on the site will *not* be updated." : ""}`,
             components: [],
           });
         }

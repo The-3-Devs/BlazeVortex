@@ -11,6 +11,8 @@ export async function addUserToSite(user: User, selectedName: string) {
     },
   });
 
+  let returnVal: string | null | undefined;
+
   try {
     await client.connect();
     const collection = client
@@ -20,6 +22,8 @@ export async function addUserToSite(user: User, selectedName: string) {
     const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
 
     const existing = await collection.findOne({ id: user.id });
+
+    returnVal = existing?.mostRecent < fiveMinutesAgo ? null : "recentlyUsed";
 
     if (!existing || existing.mostRecent < fiveMinutesAgo) {
       await collection.updateOne(
@@ -54,5 +58,6 @@ export async function addUserToSite(user: User, selectedName: string) {
     console.error("Error adding user to site:", err);
   } finally {
     await client.close();
+    return returnVal;
   }
 }
