@@ -20,7 +20,7 @@ const command: Command = {
       return;
     }
 
-    await interaction.reply(message);
+    await interaction.reply(message + " **(This message was sent by a user!)**");
   },
 };
 

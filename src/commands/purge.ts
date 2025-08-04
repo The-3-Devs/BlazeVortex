@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Client, MessageFlags} from "discord.js";
+import { ChatInputCommandInteraction, Client, MessageFlags } from "discord.js";
 import { Command } from "../types";
 import {
   retrieveJSONData,
@@ -6,6 +6,7 @@ import {
   getMemoryFilePath,
 } from "../lib/base-memory-functions";
 import path from "path";
+import config from "../config.json";
 
 const command: Command = {
   name: "purge",
@@ -22,6 +23,14 @@ const command: Command = {
     interaction: ChatInputCommandInteraction,
     _client: Client
   ) => {
+
+    if (!config.admins.includes(interaction.user.id)) {
+      await interaction.reply(
+        "You do not have permission to use this command. Only T3D admins can ban users."
+      );
+      return;
+    }
+
     const amount = interaction.options.getInteger("amount", true);
 
     const serverId = interaction.guild?.id;
@@ -29,7 +38,7 @@ const command: Command = {
     if (!amount || amount < 1 || amount > 100) {
       await interaction.reply({
         content: "You must provide a valid number between 1 and 100.",
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -38,7 +47,7 @@ const command: Command = {
     if (!channel || !channel.isTextBased() || !("bulkDelete" in channel)) {
       await interaction.reply({
         content: "This command can only be used in text channels.",
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -61,11 +70,11 @@ const command: Command = {
         }
 
         for (let i = amount; i > 0; i--) {
-          existingData.messages.pop()
-        } 
-        
-        setJSONData(dir, "memory.json", existingData)
-      }      
+          existingData.messages.pop();
+        }
+
+        setJSONData(dir, "memory.json", existingData);
+      }
 
       if (!channelId || !serverId) {
         await interaction.reply(`Failed to purge ${amount} message(s)`);
@@ -74,14 +83,14 @@ const command: Command = {
       const deleted = await channel.bulkDelete(amount, true);
       await interaction.reply({
         content: `Deleted ${deleted.size} messages 🧹`,
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
     } catch (err) {
       console.error(err);
       await interaction.reply({
         content:
           "Couldn’t delete the messages. Maybe they’re too old? (14 day limit) 🕰️",
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
     }
   },

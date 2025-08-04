@@ -14,10 +14,11 @@ const command: Command = {
         { name: "/coinFlip", value: "Flips a coin and shows either a red or green emoji!" },
         { name: "/help", value: "Displays this list of commands and their descriptions." },
         { name: "/invite", value: "Sends an invite link for the bot." },
-        { name: "/joke", value: "Tells a random joke." },
+        { name: "/randon_joke", value: "Tells a random joke." },
         { name: "/me", value: "Shows the bot's about me and avatar!" },
         { name: "/setup", value: "Allows server admins to set up the bot in their server" },
         { name: "/ping", value: "Replies with ping information" },
+        { name: "/f", value: "Run /f to pay respects (shows your name on https://blazevortexbot.com/user-list)" },
       )
 
     // Send the embed
