@@ -1,10 +1,17 @@
 # BlazeVortex
 
-## *BlazeVortex is a Discord bot that adds extra humor to any conversation by leveraging AI to generate funny, contextually accurate messages.*
+## *BlazeVortex is a Discord bot that adds extra humor to any conversation by leveraging AI to generate funny, contextually accurate, rude messages!*
 
 ## **IMPORTANT: Read [CONTRIBUTING.md](/CONTRIBUTING.md) before working/commiting any changes**
 
 *Not doing so may result in your changes being automatically reverted*
+
+> # WARNING:  
+> We are not responsible of any type(s) of damage caused by 
+> BlazeVortex **At All** (exception is there for the topics of
+>religion! You may DM (Direct Message) a T3D member such as Arti
+>(discord id: artificialxdev) )
+> Visit our website for more info: [BlazeVortex](https://www.blazevortexbot.com)
 
 # 🚧 Development Instructions
 
@@ -41,7 +48,7 @@ Create a file named `config.json` inside the `./src` directory.
 ```json
 {
   "token": "[Your Discord Bot Token]",
-  "admins": [
+  "admins": [ // please remove these ids if you dont want us tinkerin with your bot
     "922052576579579904",
     "148851320453857280",
     "977131375431913522",
@@ -52,8 +59,8 @@ Create a file named `config.json` inside the `./src` directory.
   ],
   "geminiApiKey": "[Your Gemini API Key]",
   "clientId": "[Your Bot's Application ID]",
-  "guildId": "1250896904854962189", # Literally has no use
-  "isBV-IB": true
+  "guildId": "1250896904854962189", 
+  "isBV-IB": false // set this to false forever!
 }
 ```
 
