@@ -8,9 +8,9 @@
 
 > # WARNING:  
 > We are not responsible of any type(s) of damage caused by 
-> BlazeVortex **At All** (exception is there for the topics of
->religion! You may DM (Direct Message) a T3D member such as Arti
->(discord id: artificialxdev) )
+> BlazeVortex **At All**
+> You may DM (Direct Message) a T3D member such as Arti
+> (discord id: artificialxdev) )
 > Visit our website for more info: [BlazeVortex](https://www.blazevortexbot.com)
 
 # 🚧 Development Instructions
